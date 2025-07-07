@@ -1,0 +1,46 @@
+---
+# id of your service, used for slugs and references in EventCatalog.
+id: SMS
+
+# Display name of the Service, rendered in EventCatalog
+name: SMS
+
+# Version of the Service
+version: 1.0.2
+
+# Short summary of your Service
+summary: |
+  Service that contains order related information
+
+specifications:
+- type: openapi
+  path: openapi.yml
+  name: OpenAPI Specification
+- type: asyncapi
+  path: asyncapi.yml
+  name: AsyncAPI Specification
+
+receives:
+  - id: sms-queue
+    version: 1.0.0
+
+sends:
+  - id: sms-microservice-v1-command-sms-send
+    version: 1.0.0
+  - id: sms-microservice-v1-event-sms-sms-created
+    version: 1.0.0
+  - id: sms-microservice-v1-event-sms-sms-updated
+    version: 1.0.0
+  - id: sms-microservice-v1-event-sms-sms-archived
+    version: 1.0.0
+---
+
+## Overview
+
+This SMS service gives API consumers the ability to produce SMS in the systems. Events are raised from this system for downstream consumption.
+
+<NodeGraph />
+---
+<Schema file="schema.dbml" title="DBML" lang="prisma"/>
+---
+<Schema file="schema.graphql" title="graphql" lang="graphql"/>

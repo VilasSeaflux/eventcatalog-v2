@@ -1,16 +1,25 @@
 {
-  "name": "my-catalog",
+  "name": "utopikai-service-catalog-v2",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "eventcatalog dev",
+    "dev": "npm run copy-src && eventcatalog dev",
     "build": "eventcatalog build",
     "start": "eventcatalog start",
     "preview": "eventcatalog preview",
     "generate": "eventcatalog generate",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "copy-src": "cp -r src/* .eventcatalog-core/src/",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node script.ts"
   },
   "dependencies": {
-    "@eventcatalog/core": "2.47.1"
+    "@aws-amplify/auth": "^6.13.1",
+    "@aws-amplify/ui-react": "^6.11.2",
+    "@aws-sdk/client-cognito-identity-provider": "^3.835.0",
+    "@eventcatalog/core": "2.47.1",
+    "astro": "^5.10.1",
+    "aws-amplify": "^6.15.1",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.2.0"
   }
 }

@@ -1,0 +1,38 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table tokens {
+  id String [pk]
+  userId String
+  tenantId String [not null]
+  llmId String [not null]
+  connectorId String
+  assistantId String
+  tokenType TokenType
+  usageType UsageType
+  isFree Boolean [not null]
+  inputTokensConsumed Int [not null]
+  outputTokensConsumed Int [not null]
+  consumeTime DateTime [not null]
+  inputCost Float [not null]
+  outputCost Float [not null]
+  inputMargin Float [not null]
+  outputMargin Float [not null]
+  finalCharge Float [not null]
+  currency String [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Enum TokenType {
+  TEXT
+  AUDIO
+  VIDEO
+  IMAGE
+  VISION
+}
+
+Enum UsageType {
+  INGESTION
+  CHAT
+}

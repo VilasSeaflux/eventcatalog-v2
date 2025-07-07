@@ -1,0 +1,68 @@
+asyncapi: 2.5.0
+info:
+  title: Messages Async API
+  description: The Messages Async API description
+  version: '1.0'
+  contact: {}
+tags: []
+servers:
+  message-server:
+    url: >-
+      AMQP://k8s-chatbotr-chatbotr-ac24d7b2ed-5ead8de34553485a.elb.eu-west-1.amazonaws.com/
+    protocol: amqp
+    protocolVersion: '1'
+    description: Allows you to connect using the AMQP protocol to Messaging Broker.
+    security:
+      - user-password: []
+    variables:
+      port:
+        description: >-
+          Secure connection (TLS) is available through port 5671. Non secure
+          connection available through port 5672.
+        default: '5672'
+    bindings: {}
+components:
+  securitySchemes:
+    user-password:
+      type: userPassword
+  schemas:
+    MessageInput:
+      type: object
+      properties:
+        senderNumber:
+          type: string
+          description: The phone number of sender
+          default: '+3312345678'
+        senderPlatform:
+          type: string
+          description: The platform name which sends the message from
+          default: ''
+        receiverNumber:
+          type: string
+          description: The phone number of receiver
+          default: '+33756810722'
+        body:
+          type: string
+          description: The body of message
+          default: Demo message
+        userId:
+          type: string
+          description: User ID
+          example: 550e8400-e29b-41d4-a716-446655440000
+      required:
+        - senderNumber
+        - senderPlatform
+        - receiverNumber
+        - body
+        - userId
+defaultContentType: application/json
+channels:
+  message-created:
+    publish:
+      summary: Message request created
+      description: This method is used to let the platform know that a message is created
+      message:
+        name: data
+        payload:
+          $ref: '#/components/schemas/MessageInput'
+        x-identifier: message-created

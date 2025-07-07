@@ -1,0 +1,805 @@
+asyncapi: 2.5.0
+info:
+  title: Subscriptions Microservice Async API
+  description: Microservice for managing subscriptions
+  version: '1.0'
+  contact: {}
+tags: []
+servers:
+  Server:
+    url: >-
+      amqp://utopikai-rag-solace-dev-c18f75dc81ef2e53.elb.eu-west-1.amazonaws.com:5672/
+    protocol: amqp
+    protocolVersion: '1'
+    description: Allows you to connect using the AMQP protocol to Messaging Broker.
+    security:
+      - user-password: []
+    variables:
+      port:
+        description: >-
+          Secure connection (TLS) is available through port 5671. Non secure
+          connection available through port 5672.
+        default: '5672'
+    bindings: {}
+components:
+  securitySchemes:
+    user-password:
+      type: userPassword
+  schemas:
+    RequestHeaders:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          description: Unique identifier for tracking the request
+          example: 123e4567-e89b-12d3-a456-426614174000
+        sourceType:
+          type: string
+          description: Type of the source of the message
+          example: API
+        sourceIdType:
+          type: string
+          description: Type of identifier
+          example: USER_ID
+        sourceId:
+          type: string
+          description: Identifier of the source, conform to the sourceIdType
+          example: user-12345
+        uid:
+          type: string
+          description: Unique ID of the message instance in the channel
+          example: abc123xyz
+        dataConfidentiality:
+          type: string
+          description: Data confidentiality classification of the message
+          enum:
+            - A
+            - B
+            - C
+            - INTERNAL
+            - PUBLIC
+            - P
+            - P+
+          example: PUBLIC
+        persistence:
+          type: boolean
+          description: Tells if the message can be persisted by the receiver
+          example: true
+        replyChannel:
+          type: string
+          description: URI Identifier of the channel to which the response should be sent
+          example: http://response-channel.example.com
+        createdAt:
+          type: string
+          description: Creation date time
+          example: '2023-01-01T12:00:00Z'
+        charEncoding:
+          type: string
+          description: Char encoding of the data
+          example: UTF-8
+        languageCode:
+          type: string
+          description: Language code of the data, default is English.
+          example: en
+        host:
+          type: string
+          description: Hostname from where the request is coming from
+          example: example.com
+        topic:
+          type: string
+          description: Topic name
+          example: topic-name
+      required:
+        - correlationId
+        - sourceId
+        - uid
+        - createdAt
+        - topic
+    AuthUserInvitedRequest:
+      type: object
+      properties:
+        _headers:
+          example:
+            correlationId: 123e4567-e89b-12d3-a456-426614174000
+            sourceType: API
+            sourceIdType: USER_ID
+            sourceId: user-12345
+            uid: abc123xyz
+            dataConfidentiality: PUBLIC
+            persistence: true
+            replyChannel: http://response-channel.example.com
+            createdAt: '2023-01-01T12:00:00Z'
+            charEncoding: UTF-8
+            languageCode: en
+            host: example.com
+            topic: topic
+          allOf:
+            - $ref: '#/components/schemas/RequestHeaders'
+        invitationId:
+          type: string
+          description: UUID
+          example: 123e4567-e89b-12d3-a456-426614174000
+        email:
+          type: string
+          description: Email format
+          example: test@example.com
+        tenantId:
+          type: string
+          description: Tenant ID
+          example: tenant-123
+        createdAt:
+          type: string
+          description: Date-time format
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          description: Date-time format
+          example: '2023-01-02T12:00:00Z'
+      required:
+        - _headers
+        - invitationId
+        - tenantId
+    AuthUserActivatedRequest:
+      type: object
+      properties:
+        _headers:
+          example:
+            correlationId: 123e4567-e89b-12d3-a456-426614174000
+            sourceType: API
+            sourceIdType: USER_ID
+            sourceId: user-12345
+            uid: abc123xyz
+            dataConfidentiality: PUBLIC
+            persistence: true
+            replyChannel: http://response-channel.example.com
+            createdAt: '2023-01-01T12:00:00Z'
+            charEncoding: UTF-8
+            languageCode: en
+            host: example.com
+            topic: topic
+          allOf:
+            - $ref: '#/components/schemas/RequestHeaders'
+        userId:
+          type: string
+          description: User ID in UUID format
+          example: 123e4567-e89b-12d3-a456-426614174000
+        tenantId:
+          type: string
+          description: Tenant ID
+          example: tenant-123
+        createdAt:
+          type: string
+          description: Creation date in date-time format
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          description: Update date in date-time format
+          example: '2023-01-02T12:00:00Z'
+      required:
+        - _headers
+        - userId
+        - tenantId
+    AuthUserDeactivatedRequest:
+      type: object
+      properties:
+        _headers:
+          example:
+            correlationId: 123e4567-e89b-12d3-a456-426614174000
+            sourceType: API
+            sourceIdType: USER_ID
+            sourceId: user-12345
+            uid: abc123xyz
+            dataConfidentiality: PUBLIC
+            persistence: true
+            replyChannel: http://response-channel.example.com
+            createdAt: '2023-01-01T12:00:00Z'
+            charEncoding: UTF-8
+            languageCode: en
+            host: example.com
+            topic: topic
+          allOf:
+            - $ref: '#/components/schemas/RequestHeaders'
+        userId:
+          type: string
+          description: User ID in UUID format
+          example: 123e4567-e89b-12d3-a456-426614174000
+        tenantId:
+          type: string
+          description: Tenant ID
+          example: tenant-123
+        createdAt:
+          type: string
+          description: Creation date in date-time format
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          description: Update date in date-time format
+          example: '2023-01-02T12:00:00Z'
+      required:
+        - _headers
+        - userId
+        - tenantId
+    AuthUserJoinedRequest:
+      type: object
+      properties:
+        _headers:
+          example:
+            correlationId: 123e4567-e89b-12d3-a456-426614174000
+            sourceType: API
+            sourceIdType: USER_ID
+            sourceId: user-12345
+            uid: abc123xyz
+            dataConfidentiality: PUBLIC
+            persistence: true
+            replyChannel: http://response-channel.example.com
+            createdAt: '2023-01-01T12:00:00Z'
+            charEncoding: UTF-8
+            languageCode: en
+            host: example.com
+            topic: topic
+          allOf:
+            - $ref: '#/components/schemas/RequestHeaders'
+        userId:
+          type: string
+          description: User ID in UUID format
+          example: 123e4567-e89b-12d3-a456-426614174000
+        tenantId:
+          type: string
+          description: Tenant ID
+          example: tenant-123
+        createdAt:
+          type: string
+          description: Creation date in date-time format
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          description: Update date in date-time format
+          example: '2023-01-02T12:00:00Z'
+      required:
+        - _headers
+        - userId
+        - tenantId
+    AuthUserDeletedRequest:
+      type: object
+      properties:
+        _headers:
+          example:
+            correlationId: 123e4567-e89b-12d3-a456-426614174000
+            sourceType: API
+            sourceIdType: USER_ID
+            sourceId: user-12345
+            uid: abc123xyz
+            dataConfidentiality: PUBLIC
+            persistence: true
+            replyChannel: http://response-channel.example.com
+            createdAt: '2023-01-01T12:00:00Z'
+            charEncoding: UTF-8
+            languageCode: en
+            host: example.com
+            topic: topic
+          allOf:
+            - $ref: '#/components/schemas/RequestHeaders'
+        userId:
+          type: string
+          description: User ID in UUID format
+          example: 123e4567-e89b-12d3-a456-426614174000
+        tenantId:
+          type: string
+          description: Tenant ID
+          example: tenant-123
+        createdAt:
+          type: string
+          description: Creation date in date-time format
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          description: Update date in date-time format
+          example: '2023-01-02T12:00:00Z'
+      required:
+        - _headers
+        - userId
+        - tenantId
+    AuthUserUnInvitedRequest:
+      type: object
+      properties:
+        _headers:
+          example:
+            correlationId: 123e4567-e89b-12d3-a456-426614174000
+            sourceType: API
+            sourceIdType: USER_ID
+            sourceId: user-12345
+            uid: abc123xyz
+            dataConfidentiality: PUBLIC
+            persistence: true
+            replyChannel: http://response-channel.example.com
+            createdAt: '2023-01-01T12:00:00Z'
+            charEncoding: UTF-8
+            languageCode: en
+            host: example.com
+            topic: topic
+          allOf:
+            - $ref: '#/components/schemas/RequestHeaders'
+        invitationId:
+          type: string
+          description: UUID
+          example: 123e4567-e89b-12d3-a456-426614174000
+        email:
+          type: string
+          description: Email format
+          example: test@example.com
+        tenantId:
+          type: string
+          description: Tenant ID
+          example: tenant-123
+        createdAt:
+          type: string
+          description: Date-time format
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          description: Date-time format
+          example: '2023-01-02T12:00:00Z'
+      required:
+        - _headers
+        - invitationId
+        - tenantId
+    PlanOffer:
+      type: object
+      properties:
+        planOfferId:
+          type: string
+          description: 'Required, format: UUID'
+          example: 123e4567-e89b-12d3-a456-426614174000
+        planId:
+          type: string
+          description: 'Required, format: UUID'
+          example: 987e6543-e21b-34d6-c789-654321098765
+        name:
+          type: string
+          description: Required
+          example: Premium Offer
+        description:
+          type: string
+          description: Optional description
+          example: This is a premium subscription offer.
+        offerKey:
+          type: string
+          description: Required offer key
+          example: PREMIUM_OFFER
+        position:
+          type: number
+          description: Optional position
+        stripeFeatureId:
+          type: string
+          description: Optional stripe feature ID
+          example: stripe-feature-id-123
+        isArchived:
+          type: boolean
+          description: Archive status of the offer
+          example: false
+        createdAt:
+          type: string
+          description: Date-time format of creation date
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          description: Date-time format of last update date
+          example: '2023-01-02T12:00:00Z'
+      required:
+        - planOfferId
+        - planId
+        - name
+        - offerKey
+        - isArchived
+        - createdAt
+        - updatedAt
+    PlanPrice:
+      type: object
+      properties:
+        PlanPriceId:
+          type: string
+          description: UUID of the plan price
+          example: 123e4567-e89b-12d3-a456-426614174000
+        planId:
+          type: string
+          description: UUID of the associated plan
+          example: 987e6543-e21b-34d6-c789-654321098765
+        stripePriceId:
+          type: string
+          description: Stripe price ID
+          example: price_12345
+        amount:
+          type: number
+          description: Price of the plan
+          example: 15
+        isVatIncluded:
+          type: boolean
+          description: Is vat included in the price
+          example: true
+        currency:
+          type: string
+          description: Currency code
+          example: USD
+        interval:
+          type: string
+          description: Interval for billing (MONTH/YEAR)
+          enum:
+            - MONTH
+            - YEAR
+          example: MONTH
+        trialPeriodDays:
+          type: string
+          description: Trial period in days
+          example: '14'
+        isArchived:
+          type: boolean
+          description: Archive status of the plan price
+          example: false
+        createdAt:
+          type: string
+          description: Date-time format of creation date
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          description: Date-time format of last update date
+          example: '2023-01-02T12:00:00Z'
+      required:
+        - PlanPriceId
+        - planId
+        - stripePriceId
+        - amount
+        - isVatIncluded
+        - currency
+        - interval
+        - trialPeriodDays
+        - isArchived
+        - createdAt
+        - updatedAt
+    Plan:
+      type: object
+      properties:
+        planId:
+          type: string
+          description: UUID of the plan
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          description: Name of the plan
+          example: Premium Plan
+        description:
+          type: string
+          description: Description of the plan
+          example: This plan offers premium features.
+        productName:
+          type: string
+          description: Product name, e.g., 'UTOPIKAI'
+          example: UTOPIKAI
+        paymentGatewayProductId:
+          type: string
+          description: Payment gateway product ID
+          example: prod_12345
+        recommend:
+          type: boolean
+          description: Indicates if the plan is recommended
+          example: true
+        trialPeriod:
+          type: number
+          description: Trial period in days
+          example: 14
+        durationMonths:
+          type: number
+          description: Duration in months, or null for indefinite duration
+          example: 12
+        isArchived:
+          type: boolean
+          description: Archive status of the plan
+          example: false
+        createdAt:
+          type: string
+          description: Creation date in date-time format
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          description: Last update date in date-time format
+          example: '2023-01-02T12:00:00Z'
+        planOffer:
+          description: List of plan offers
+          example:
+            - id: 123e4567-e89b-12d3-a456-426614174000
+              name: Premium Offer
+              offerKey: PREMIUM_OFFER
+              isArchived: false
+              createdAt: '2023-01-01T12:00:00Z'
+              updatedAt: '2023-01-02T12:00:00Z'
+          type: array
+          items:
+            $ref: '#/components/schemas/PlanOffer'
+        planPrice:
+          description: Pricing details of the plan
+          example:
+            id: 123e4567-e89b-12d3-a456-426614174000
+            amount: 10
+            isVatIncluded: true
+            currency: USD
+            interval: MONTH
+            trialPeriodDays: '14'
+            isArchived: false
+            createdAt: '2023-01-01T12:00:00Z'
+            updatedAt: '2023-01-02T12:00:00Z'
+          allOf:
+            - $ref: '#/components/schemas/PlanPrice'
+      required:
+        - planId
+        - name
+        - description
+        - productName
+        - paymentGatewayProductId
+        - recommend
+        - trialPeriod
+        - isArchived
+        - createdAt
+        - updatedAt
+        - planOffer
+        - planPrice
+    SubscriptionCreatedRequest:
+      type: object
+      properties:
+        subscriptionId:
+          type: string
+          description: UUID of the subscription
+          example: 123e4567-e89b-12d3-a456-426614174000
+          format: uuid
+        tenantId:
+          type: string
+          description: Tenant ID
+          example: tenant-123
+        planId:
+          type: string
+          description: UUID of the plan
+          example: 987e6543-e21b-34d6-c789-654321098765
+          format: uuid
+        paymentGatewayCustomerId:
+          type: string
+          description: Payment Gateway Customer ID
+          example: cus_12345
+        paymentGatewayMethodId:
+          type: string
+          description: Payment Gateway Method ID
+          example: pm_12345
+        paymentGatewaySubscriptionId:
+          type: string
+          description: Payment Gateway Subscription ID
+          example: sub_12345
+        paidNumberOfSeats:
+          type: number
+          description: Number of seats paid
+          example: 5
+        registeredNumberOfUsers:
+          type: number
+          description: Number of registered users
+          example: 3
+        invitedNumberOfUsers:
+          type: number
+          description: Number of invited users
+          example: 2
+        cancelationReason:
+          type: string
+          description: Cancelation reason, optional
+          example: User chose to end subscription.
+        trialStartDate:
+          type: string
+          description: Trial start date in date-time format
+          example: '2023-01-01T12:00:00Z'
+        trialEndDate:
+          type: string
+          description: Trial end date in date-time format
+          example: '2023-01-15T12:00:00Z'
+        currentPeriodEnd:
+          type: string
+          description: Current period end date
+          example: '2023-02-01T12:00:00Z'
+        status:
+          type: string
+          description: Status of the subscription
+          enum:
+            - trialing
+            - active
+            - incomplete
+            - incomplete_expired
+            - past_due
+            - canceled
+            - unpaid
+            - paused
+            - cancel_at_period_end
+          example: active
+        createdAt:
+          type: string
+          description: Creation date in date-time format
+          example: '2023-01-01T12:00:00Z'
+          format: date-time
+        updatedAt:
+          type: string
+          description: Last updated date in date-time format
+          example: '2023-01-02T12:00:00Z'
+          format: date-time
+        plan:
+          description: Details of the plan associated with the subscription
+          allOf:
+            - $ref: '#/components/schemas/Plan'
+      required:
+        - subscriptionId
+        - tenantId
+        - planId
+        - paidNumberOfSeats
+        - trialStartDate
+        - trialEndDate
+        - status
+        - plan
+    SubscriptionUpdatedRequest:
+      type: object
+      properties:
+        subscriptionId:
+          type: string
+          description: UUID of the subscription
+          example: 123e4567-e89b-12d3-a456-426614174000
+          format: uuid
+        tenantId:
+          type: string
+          description: Tenant ID
+          example: tenant-123
+        planId:
+          type: string
+          description: UUID of the plan
+          example: 987e6543-e21b-34d6-c789-654321098765
+          format: uuid
+        paymentGatewayCustomerId:
+          type: string
+          description: Payment Gateway Customer ID
+          example: cus_12345
+        paymentGatewayMethodId:
+          type: string
+          description: Payment Gateway Method ID
+          example: pm_12345
+        paymentGatewaySubscriptionId:
+          type: string
+          description: Payment Gateway Subscription ID
+          example: sub_12345
+        paidNumberOfSeats:
+          type: number
+          description: Number of seats paid
+          example: 5
+        registeredNumberOfUsers:
+          type: number
+          description: Number of registered users
+          example: 3
+        invitedNumberOfUsers:
+          type: number
+          description: Number of invited users
+          example: 2
+        cancelationReason:
+          type: string
+          description: Cancelation reason, optional
+          example: User chose to end subscription.
+        trialStartDate:
+          type: string
+          description: Trial start date in date-time format
+          example: '2023-01-01T12:00:00Z'
+        trialEndDate:
+          type: string
+          description: Trial end date in date-time format
+          example: '2023-01-15T12:00:00Z'
+        currentPeriodEnd:
+          type: string
+          description: Current period end date
+          example: '2023-02-01T12:00:00Z'
+        status:
+          type: string
+          description: Status of the subscription
+          enum:
+            - trialing
+            - active
+            - incomplete
+            - incomplete_expired
+            - past_due
+            - canceled
+            - unpaid
+            - paused
+            - cancel_at_period_end
+          example: active
+        createdAt:
+          type: string
+          description: Creation date in date-time format
+          example: '2023-01-01T12:00:00Z'
+          format: date-time
+        updatedAt:
+          type: string
+          description: Last updated date in date-time format
+          example: '2023-01-02T12:00:00Z'
+          format: date-time
+        plan:
+          description: Details of the plan associated with the subscription
+          allOf:
+            - $ref: '#/components/schemas/Plan'
+      required:
+        - subscriptionId
+        - tenantId
+        - planId
+        - paidNumberOfSeats
+        - trialStartDate
+        - trialEndDate
+        - status
+        - plan
+defaultContentType: application/json
+channels:
+  auth.user-invited-to-tenant:
+    subscribe:
+      summary: User Invited Event
+      description: Handles event when a user is invited
+      message:
+        name: auth-microservice/v1/event/tenants/user-invited
+        payload:
+          $ref: '#/components/schemas/AuthUserInvitedRequest'
+        x-identifier: auth.user-invited-to-tenant.event
+  auth.user-activated-in-tenant:
+    subscribe:
+      summary: User Activated Event
+      description: Handles event when a user is activated
+      message:
+        name: auth-microservice/v1/event/tenants/user-activated
+        payload:
+          $ref: '#/components/schemas/AuthUserActivatedRequest'
+        x-identifier: auth.user-activated-in-tenant.event
+  auth.user-deactivated-in-tenant:
+    subscribe:
+      summary: User Deactivated Event
+      description: Handles event when a user is deactivated
+      message:
+        name: auth-microservice/v1/event/tenants/user-deactivated
+        payload:
+          $ref: '#/components/schemas/AuthUserDeactivatedRequest'
+        x-identifier: auth.user-deactivated-in-tenant.event
+  auth.user-joined-tenant:
+    subscribe:
+      summary: User Joined Event
+      description: Handles event when a user is joined
+      message:
+        name: auth-microservice/v1/event/tenants/user-joined
+        payload:
+          $ref: '#/components/schemas/AuthUserJoinedRequest'
+        x-identifier: auth.user-joined-tenant.event
+  auth.user-deleted-in-tenant:
+    subscribe:
+      summary: User Deleted Event
+      description: Handles event when a user is deleted
+      message:
+        name: auth-microservice/v1/event/tenants/user-deleted
+        payload:
+          $ref: '#/components/schemas/AuthUserDeletedRequest'
+        x-identifier: auth.user-deleted-in-tenant.event
+  auth.user-uninvited-to-tenant:
+    subscribe:
+      summary: User Uninvite Event
+      description: Handles event when a user is uninvited
+      message:
+        name: auth-microservice/v1/event/tenants/user-uninvited
+        payload:
+          $ref: '#/components/schemas/AuthUserUnInvitedRequest'
+        x-identifier: auth.user-uninvited-to-tenant.event
+  subscriptions.subscription-created:
+    publish:
+      summary: Subscription Created Event
+      description: This event is published when a subscription is created.
+      message:
+        name: subscriptions-microservice/v1/event/subscriptions/subscription-created
+        payload:
+          $ref: '#/components/schemas/SubscriptionCreatedRequest'
+        x-identifier: subscriptions.subscription-created.event
+  subscriptions.subscription-updated:
+    publish:
+      summary: Subscription Updated Event
+      description: This event is published when a subscription is updated.
+      message:
+        name: subscriptions-microservice/v1/event/subscriptions/subscription-updated
+        payload:
+          $ref: '#/components/schemas/SubscriptionUpdatedRequest'
+        x-identifier: subscriptions.subscription-updated.event

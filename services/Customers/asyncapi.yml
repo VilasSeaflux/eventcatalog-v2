@@ -1,0 +1,557 @@
+asyncapi: 2.5.0
+info:
+  title: Customers MS
+  description: An MS used to manage customers and organizations
+  version: '1.0'
+  contact: {}
+tags: []
+servers:
+  Server:
+    url: >-
+      amqp://utopikai-rag-solace-dev-c18f75dc81ef2e53.elb.eu-west-1.amazonaws.com:5672/
+    protocol: amqp
+    protocolVersion: '1'
+    description: Allows you to connect using the AMQP protocol to Messaging Broker.
+    security:
+      - user-password: []
+    variables:
+      port:
+        description: >-
+          Secure connection (TLS) is available through port 5671. Non secure
+          connection available through port 5672.
+        default: '5672'
+    bindings: {}
+components:
+  securitySchemes:
+    user-password:
+      type: userPassword
+  schemas:
+    OrganisationEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the organisation event
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+        name:
+          type: string
+          description: The name of the organisation
+          example: Example Organisation
+        street1:
+          type: string
+          description: Street address line 1
+          example: 123 Main St
+        street2:
+          type: string
+          description: Street address line 2
+          example: Apt 4B
+        city:
+          type: string
+          description: City of the organisation
+          example: Sample City
+        country:
+          type: string
+          description: Country of the organisation
+          example: Sample Country
+        zipcode:
+          type: string
+          description: Zipcode of the organisation
+          example: '12345'
+        countryCode:
+          type: string
+          description: Country code of the organisation
+          example: US
+        phone:
+          type: string
+          description: Phone number of the organisation
+          example: '+1234567890'
+        email:
+          type: string
+          description: Email of the organisation
+          example: contact@example.org
+        type:
+          type: string
+          description: The type of organisation
+          example: BUSINESS
+        size:
+          type: string
+          description: The size of the organisation
+          example: 10-20
+        status:
+          type: string
+          description: The status of the organisation
+          example: ACTIVE
+        sector:
+          type: string
+          description: The sector of the organisation
+          example: Technology
+          nullable: true
+        isArchived:
+          type: boolean
+          description: Indicates if the organisation event is archived
+          example: false
+        createdAt:
+          type: string
+          description: The date when the organisation event was created
+          example: '2023-01-01T00:00:00Z'
+        updatedAt:
+          type: string
+          description: The date when the organisation event was last updated
+          example: '2023-01-02T00:00:00Z'
+      required:
+        - id
+        - name
+        - type
+        - sector
+        - updatedAt
+    UserDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The UUID of the user
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+        email:
+          type: string
+          description: The email of the user
+          example: user@example.com
+        defaultLanguage:
+          type: string
+          description: The default language of the user
+          example: en
+        leadSource:
+          type: string
+          description: The source of lead
+          enum:
+            - Search Engine (Google/Bing)
+            - Friend/Colleague
+            - LinkedIn
+            - X/Twitter
+            - Facebook
+            - Instagram
+            - HackerNews
+            - Reddit
+            - YouTube
+            - Podcast
+            - Article/Blog
+            - Advertisements
+            - Other
+        jobDescription:
+          type: string
+          description: The job description of the user
+          enum:
+            - STUDENT
+            - TEACHER
+            - Freelancer
+            - Consultant
+            - Product Manager
+            - Project Manager
+            - Business Analyst
+            - Founder / Co-Founder
+            - CEO (Chief Executive Officer)
+            - CTO (Chief Technology Officer)
+            - COO (Chief Operating Officer)
+            - CFO (Chief Financial Officer)
+            - Content Strategist
+            - Technical Writer
+            - Research Scientist
+            - Customer Service Representative
+            - IT Support Specialist
+            - Business Development Manager
+            - Growth Hacker
+            - Operations Manager
+            - Supply Chain Manager
+            - Logistics Coordinator
+            - Finance Manager
+            - Accountant
+            - Legal Counsel
+            - Compliance Officer
+            - IT Architect
+            - HR Manager
+            - Recruiter
+            - Office Manager
+            - Administrative Assistant
+            - Support Engineer
+            - Customer Success Manager
+            - Technical Support Specialist
+            - Sales Representative
+            - Sales Manager
+            - Marketing Specialist
+            - Digital Marketing Manager
+            - Content Creator
+            - SEO Specialist
+            - Social Media Manager
+            - UI/UX Designer
+            - Graphic Designer
+            - Product Designer
+            - Interaction Designer
+            - DevOps Engineer
+            - QA (Quality Assurance) Engineer
+            - Data Scientist
+            - Data Analyst
+            - Security Engineer
+            - Software Developer
+            - Others
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: Last name of the user
+        street1:
+          type: string
+          description: Street address line 1
+        street2:
+          type: string
+          description: Street address line 2
+        city:
+          type: string
+          description: City
+        country:
+          type: string
+          description: Country
+        zipcode:
+          type: string
+          description: Zip code
+        countryCode:
+          type: string
+          description: Country code
+        phone:
+          type: string
+          description: Phone number
+        isUtopikOperator:
+          type: boolean
+          description: Specifies if the user is a Utopik operator
+        isUtopikAIAdmin:
+          type: boolean
+          description: Specifies if the user is a Utopik AI admin
+        status:
+          type: string
+          description: The status of the user
+          enum:
+            - ACTIVE
+            - INACTIVE
+            - SUSPENDED
+            - PENDING
+            - BANNED
+        isVerified:
+          type: boolean
+          description: Specifies if the user is verified
+          default: false
+        isArchived:
+          type: boolean
+          description: Specifies if the user is archived
+          default: false
+        createdAt:
+          type: string
+          description: The date and time when the user was created
+          format: date-time
+        updatedAt:
+          type: string
+          description: The date and time when the user was last updated
+          format: date-time
+      required:
+        - userId
+        - email
+        - defaultLanguage
+        - status
+        - createdAt
+        - updatedAt
+    DeleteUserDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the user
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+        tenantId:
+          type: string
+          description: The unique identifier of the tenant
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+        createdAt:
+          type: string
+          description: The creation timestamp of the user record
+          example: '2023-10-20T15:45:00Z'
+          format: date-time
+        updatedAt:
+          type: string
+          description: The last updated timestamp of the user record
+          example: '2023-10-21T12:30:00Z'
+          format: date-time
+      required:
+        - userId
+        - tenantId
+    AuthTenantEvent:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          description: The unique identifier of the tenant
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        schemaName:
+          type: string
+          description: The name of the schema
+          example: exampleSchemaName
+        name:
+          type: string
+          description: The name associated with the tenant event
+          example: Example Tenant Event
+        organisationId:
+          type: string
+          description: The unique identifier of the organisation
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        createdBy:
+          type: string
+          description: The unique identifier of the user who created the tenant event
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        bucketName:
+          type: string
+          description: The name of the bucket used by the tenant
+          example: example-bucket
+        region:
+          type: string
+          description: The region where the tenant is hosted
+          example: us-east-1
+        status:
+          type: string
+          description: The status of the tenant
+          example: ACTIVE
+          enum:
+            - INACTIVE
+            - TRIAL
+            - PENDING
+            - ACTIVE
+            - CLOSED
+            - EXPIRED
+            - SUSPENDED
+        isArchived:
+          type: boolean
+          description: Indicates if the tenant event is archived
+          example: false
+        createdAt:
+          type: string
+          description: The date when the tenant event was created
+          example: '2023-01-01T00:00:00Z'
+          format: date-time
+        updatedAt:
+          type: string
+          description: The date when the tenant event was last updated
+          example: '2023-01-02T00:00:00Z'
+          format: date-time
+      required:
+        - tenantId
+        - createdAt
+    UpdateTenant:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          description: The unique identifier of the tenant
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+        organisationId:
+          type: string
+          description: The unique identifier of the organisation
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+        isArchived:
+          type: boolean
+          description: 'Indicates if the tenant is archived. Default value: false'
+          example: false
+        createdAt:
+          type: string
+          description: The creation timestamp of the tenant
+          example: '2023-04-01T12:00:00Z'
+          format: date-time
+        updatedAt:
+          type: string
+          description: The timestamp of the last update
+          example: '2023-04-01T12:00:00Z'
+          format: date-time
+      required:
+        - tenantId
+        - isArchived
+        - createdAt
+        - updatedAt
+    CustomersTenantCreatedEvent:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          description: The unique identifier of the tenant
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        organisationId:
+          type: string
+          description: The unique identifier of the organisation
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        isArchived:
+          type: boolean
+          description: Indicates if the tenant event is archived
+          example: false
+        createdAt:
+          type: string
+          description: The date when the tenant event was created
+          example: '2023-01-01T00:00:00Z'
+          format: date-time
+        updatedAt:
+          type: string
+          description: The date when the tenant event was last updated
+          example: '2023-01-02T00:00:00Z'
+          format: date-time
+      required:
+        - tenantId
+        - createdAt
+    AuthUserJoinedEvent:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the user
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        tenantId:
+          type: string
+          description: The unique identifier of the tenant
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        createdAt:
+          type: string
+          description: The date when the user joined
+          example: '2023-01-01T00:00:00Z'
+          format: date-time
+        updatedAt:
+          type: string
+          description: The date when the user was last updated
+          example: '2023-01-02T00:00:00Z'
+          format: date-time
+      required:
+        - userId
+        - tenantId
+        - createdAt
+    TenantUserEvent:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the tenant user event
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+        tenantId:
+          type: string
+          description: The unique identifier of the tenant
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+        createdAt:
+          type: string
+          description: The date when the tenant user event was created
+          example: '2023-01-01T00:00:00Z'
+        updatedAt:
+          type: string
+          description: The date when the tenant user event was last updated
+          example: '2023-01-02T00:00:00Z'
+      required:
+        - userId
+        - tenantId
+        - createdAt
+defaultContentType: application/json
+channels:
+  customers.organisation-created:
+    publish:
+      summary: Organisation Created Event
+      description: Sends event when a organisation is created
+      message:
+        name: customers-microservice/v1/event/organisations/organisation-created
+        payload:
+          $ref: '#/components/schemas/OrganisationEvent'
+        x-identifier: customers.organisation-created.event
+  customers.organisation-updated:
+    publish:
+      summary: Organisation Updated Event
+      description: Sends event when a organisation is Updated
+      message:
+        name: customers-microservice/v1/event/organisations/organisation-updated
+        payload:
+          $ref: '#/components/schemas/OrganisationEvent'
+        x-identifier: customers.organisation-updated.event
+  auth.user-created:
+    subscribe:
+      summary: User Created Event
+      description: Handles event when a user is created
+      message:
+        name: auth-microservice/v1/event/users/user-created
+        payload:
+          $ref: '#/components/schemas/UserDTO'
+        x-identifier: auth.user-created.event
+  auth.user-updated:
+    subscribe:
+      summary: User Updated Event
+      description: Handles event when a user is updated
+      message:
+        name: auth-microservice/v1/event/users/user-updated
+        payload:
+          $ref: '#/components/schemas/UserDTO'
+        x-identifier: auth.user-updated.event
+  auth.user-deleted-in-tenant:
+    subscribe:
+      summary: User Deleted Event
+      description: Handles event when a user is deleted from a tenant
+      message:
+        name: auth-microservice/v1/event/tenants/user-deleted
+        payload:
+          $ref: '#/components/schemas/DeleteUserDTO'
+        x-identifier: auth.user-deleted-in-tenant.event
+  auth.tenant-updated:
+    subscribe:
+      summary: Tenant Updated Event
+      description: Handles event when a tenant is updated
+      message:
+        name: auth-microservice/v1/event/tenants/tenant-updated
+        payload:
+          $ref: '#/components/schemas/AuthTenantEvent'
+        x-identifier: auth.tenant-updated.event
+  customers.tenant-updated:
+    publish:
+      summary: Tenant Updated Event
+      description: Sends event when a tenant is updated
+      message:
+        name: customers-microservice/v1/event/tenants/tenant-updated
+        payload:
+          $ref: '#/components/schemas/UpdateTenant'
+        x-identifier: customers.tenant-updated.event
+  auth.tenant-created:
+    subscribe:
+      summary: Tenant Created Event
+      description: Handles event when a tenant is created
+      message:
+        name: auth-microservice/v1/event/tenants/tenant-created
+        payload:
+          $ref: '#/components/schemas/AuthTenantEvent'
+        x-identifier: auth.tenant-created.event
+  customers.tenant-created:
+    publish:
+      summary: Tenant Created Event
+      description: Sends event when a tenant is created
+      message:
+        name: customers-microservice/v1/event/tenants/tenant-created
+        payload:
+          $ref: '#/components/schemas/CustomersTenantCreatedEvent'
+        x-identifier: customers.tenant-created.event
+  auth.user-joined-tenant:
+    subscribe:
+      summary: User Joined Tenant Event
+      description: Handles event when a user joins a tenant
+      message:
+        name: auth-microservice/v1/event/tenants/user-joined
+        payload:
+          $ref: '#/components/schemas/AuthUserJoinedEvent'
+        x-identifier: auth.user-joined-tenant.event
+  customers.user-joined-tenant:
+    publish:
+      summary: User joined event
+      description: Sends event when a user joins a tenant
+      message:
+        name: customers-microservice/v1/event/tenants/user-joined"
+        payload:
+          $ref: '#/components/schemas/TenantUserEvent'
+        x-identifier: customers.user-joined-tenant.event

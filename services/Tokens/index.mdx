@@ -1,0 +1,40 @@
+---
+# id of your service, used for slugs and references in EventCatalog.
+id: Tokens
+
+# Display name of the Service, rendered in EventCatalog
+name: Tokens
+
+# Version of the Service
+version: 1.0.2
+
+# Short summary of your Service
+summary: |
+  Service that contains order related information
+
+specifications:
+- type: openapi
+  path: openapi.yml
+  name: OpenAPI Specification
+- type: asyncapi
+  path: asyncapi.yml
+  name: AsyncAPI Specification
+
+receives:
+  - id: tokens-queue
+    version: 1.0.0
+
+sends:
+  - id: tokens-microservice-v1-event-tokens-tokens-billings-queue-created
+    version: 1.0.0
+---
+
+## Overview
+
+This Tokens service gives API consumers the ability to produce Tokens in the systems. Events are raised from this system for downstream consumption.
+
+<NodeGraph />
+---
+<Schema file="schema.dbml" title="DBML" lang="prisma"/>
+---
+<Schema file="schema.graphql" title="graphql" lang="graphql"/>

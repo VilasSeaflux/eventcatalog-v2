@@ -1,0 +1,166 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Token {
+  id: ID!
+  userId: String
+  tenantId: String!
+  llmId: String!
+  connectorId: String
+  tokenType: TokenType
+  usageType: UsageType
+  isFree: Boolean!
+  inputTokensConsumed: Int!
+  outputTokensConsumed: Int!
+  consumeTime: DateTime
+  inputCost: Float!
+  outputCost: Float!
+  inputMargin: Float!
+  outputMargin: Float!
+  finalCharge: Float!
+  currency: String!
+  createdAt: DateTime!
+  assistantId: String
+}
+
+enum TokenType {
+  TEXT
+  AUDIO
+  VIDEO
+  IMAGE
+  VISION
+}
+
+enum UsageType {
+  INGESTION
+  CHAT
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type PaginatedTokens {
+  tokens: [Token!]!
+  limit: Int!
+  offset: Int!
+  total: Int!
+}
+
+type Query {
+  getTokensByTenantId(distinct: String, limit: Int! = 10, offset: Int! = 0, order_by: [TokenOrderInput!], where: TokenFilterInput): PaginatedTokens!
+  getTokenById(id: String!): Token!
+  getTokens(distinct: String, limit: Int! = 10, offset: Int! = 0, order_by: [TokenOrderInput!], where: TokenFilterInput): PaginatedTokens!
+  getTokensByUserId(distinct: String, limit: Int! = 10, offset: Int! = 0, order_by: [TokenOrderInput!], where: TokenFilterInput): PaginatedTokens!
+}
+
+input TokenOrderInput {
+  direction: OrderDirection!
+  field: TokenOrderField!
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+enum TokenOrderField {
+  tokenType
+  usageType
+  inputTokensConsumed
+  outputTokensConsumed
+  consumeTime
+  inputCost
+  outputCost
+  inputMargin
+  outputMargin
+  finalCharge
+  currency
+  createdAt
+}
+
+input TokenFilterInput {
+  _and: [TokenFilterInput!]
+  _or: [TokenFilterInput!]
+  _not: [TokenFilterInput!]
+  tokenType: FilterTokenTypeInput
+  usageType: FilterUsageTypeInput
+  isFree: Boolean
+  id: ID
+  inputTokensConsumed: FilterIntInput
+  outputTokensConsumed: FilterIntInput
+  consumeTime: FilterDateInput
+  inputCost: FilterFloatInput
+  outputCost: FilterFloatInput
+  inputMargin: FilterFloatInput
+  outputMargin: FilterFloatInput
+  finalCharge: FilterFloatInput
+  currency: FilterStringInput
+  createdAt: FilterDateInput
+  assistantId: FilterStringInput
+}
+
+input FilterTokenTypeInput {
+  _eq: TokenType
+  _in: [TokenType!]
+  _nin: [TokenType!]
+  _neq: String
+  _is_null: Boolean
+}
+
+input FilterUsageTypeInput {
+  _eq: UsageType
+  _in: [UsageType!]
+  _nin: [UsageType!]
+  _neq: String
+  _is_null: Boolean
+}
+
+input FilterIntInput {
+  _eq: Int
+  _neq: Int
+  _gt: Int
+  _gte: Int
+  _lt: Int
+  _lte: Int
+  _in: [Int!]
+  _nin: [Int!]
+  _is_null: Boolean
+}
+
+input FilterDateInput {
+  _eq: DateTime
+  _neq: DateTime
+  _gt: DateTime
+  _gte: DateTime
+  _lt: DateTime
+  _lte: DateTime
+  _in: [DateTime!]
+  _nin: [DateTime!]
+  _is_null: Boolean
+}
+
+input FilterFloatInput {
+  _eq: Float
+  _neq: Float
+  _gt: Float
+  _gte: Float
+  _lt: Float
+  _lte: Float
+  _in: [Float!]
+  _nin: [Float!]
+  _is_null: Boolean
+}
+
+input FilterStringInput {
+  _contains: String
+  _starts_with: String
+  _ends_with: String
+  _eq: String
+  _in: [String!]
+  _nin: [String!]
+  _is_null: Boolean
+  _neq: String
+}

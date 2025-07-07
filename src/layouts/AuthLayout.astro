@@ -1,0 +1,61 @@
+---
+const { title } = Astro.props;
+import { Auth } from "./Auth";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} - EventCatalog</title>
+  </head>
+  <body>
+    <Auth client:load />
+
+    <script>
+      import { Hub } from "aws-amplify/utils";
+      import "../amplifyClient";
+      import { fetchAuthSession, getCurrentUser } from "@aws-amplify/auth";
+
+      async function handleAuthSuccess(userDetails: any) {
+        const session = await fetchAuthSession();
+        const idToken = session.tokens?.idToken?.toString();
+        console.log("ID token:", idToken);
+
+        if (userDetails) {
+          const res = await fetch("/api/set-user", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: userDetails.email, idToken }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            document.location.href = "/";
+          }
+        }
+      }
+
+      async function checkAuth() {
+        try {
+          const user = await getCurrentUser();
+          const userDetails = {
+            email: user.signInDetails?.loginId,
+          };
+          if (user.signInDetails?.loginId) {
+            handleAuthSuccess(userDetails);
+            return;
+          }
+        } catch (error) {
+          console.log("User not authenticated:", error);
+        }
+      }
+
+      Hub.listen("auth", ({ payload }) => {
+        if (payload.event === "signedIn") {
+          checkAuth();
+        }
+      });
+    </script>
+  </body>
+</html>

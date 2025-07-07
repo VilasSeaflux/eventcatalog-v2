@@ -1,0 +1,392 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Plan {
+  id: String!
+  name: String!
+  description: String!
+  productName: PlanProducts!
+  paymentGatewayProductId: String!
+  recommend: Boolean!
+  trialPeriod: Int!
+  durationMonths: Int
+  allowedNumberOfSeats: Int!
+  isArchived: Boolean!
+  createdAt: String!
+  updatedAt: String
+}
+
+enum PlanProducts {
+  UTOPIKAI
+}
+
+type PlanOffer {
+  id: String!
+  planId: String!
+  name: String!
+  description: String
+  offerKey: String!
+  position: Int
+  stripeFeatureId: String!
+  isArchived: Boolean!
+  createdAt: String!
+  updatedAt: String
+}
+
+type PlanPrice {
+  id: String!
+  planId: String!
+  stripePriceId: String!
+  amount: Float!
+  isVatIncluded: Boolean!
+  currency: String!
+  interval: PlanPriceInterval!
+  trialPeriodDays: String!
+  isArchived: Boolean!
+  createdAt: String!
+  updatedAt: String
+}
+
+enum PlanPriceInterval {
+  MONTH
+  YEAR
+}
+
+type Subscription {
+  id: String!
+  tenantId: String!
+  planId: String!
+  paymentGatewaySubscriptionId: String!
+  paymentGatewayCustomerId: String!
+  paymentGatewayMethodId: String
+  paidNumberOfSeats: Int!
+  registeredNumberOfUsers: Int!
+  invitedNumberOfUsers: Int!
+  cancelationReason: String
+  trialStartDate: String
+  trialEndDate: String
+  currentPeriodEnd: String
+  status: SubscriptionStatus!
+  createdAt: String!
+  updatedAt: String
+}
+
+enum SubscriptionStatus {
+  trialing
+  active
+  incomplete
+  incomplete_expired
+  past_due
+  canceled
+  unpaid
+  paused
+  cancel_at_period_end
+}
+
+type TenantPlan {
+  id: ID!
+  name: String!
+  description: String!
+  productName: PlanProducts!
+  paymentGatewayProductId: String!
+  recommend: Boolean!
+  trialPeriod: Int!
+  durationMonths: Int
+  allowedNumberOfSeats: Int!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  planPrice: PlanPrice!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the RFC 3339 date-time format
+"""
+scalar DateTime
+
+type TenantSubscription {
+  id: ID!
+  tenantId: String!
+  paymentGatewaySubscriptionId: String!
+  paymentGatewayCustomerId: String!
+  paymentGatewayMethodId: String
+  paidNumberOfSeats: Int!
+  registeredNumberOfUsers: Int!
+  invitedNumberOfUsers: Int!
+  cancelationReason: String
+  trialStartDate: DateTime
+  trialEndDate: DateTime
+  currentPeriodEnd: DateTime
+  status: SubscriptionStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  plan: TenantPlan!
+}
+
+type PlanWithOffersAndPrices {
+  id: String!
+  name: String!
+  description: String!
+  productName: PlanProducts!
+  paymentGatewayProductId: String!
+  recommend: Boolean!
+  trialPeriod: Int!
+  durationMonths: Int
+  allowedNumberOfSeats: Int!
+  isArchived: Boolean!
+  createdAt: String!
+  updatedAt: String
+  planOffers: [PlanOffer!]!
+  planPrices: [PlanPrice!]!
+}
+
+type PaginatedPlans {
+  plans: [PlanWithOffersAndPrices!]!
+  limit: Int!
+  offset: Int!
+  total: Int!
+}
+
+type PaginatedSubscriptions {
+  subscriptions: [Subscription!]!
+  limit: Int!
+  offset: Int!
+  total: Int!
+}
+
+type PaginatedTenantSubscriptions {
+  subscriptions: [TenantSubscription!]!
+  limit: Int!
+  offset: Int!
+  total: Int!
+}
+
+type CancelSubscriptionResponse {
+  status: String!
+}
+
+type Query {
+  getSubscriptionByTenantId(distinct: DistinctFieldsForSubscriptions, limit: Int! = 10, offset: Int! = 0, order_by: [SubscriptionsOrderInput!] = [], where: SubscriptionsFilterInput): PaginatedTenantSubscriptions
+  getPlans(includeArchived: Boolean! = false, distinct: DistinctFieldsForPlans, limit: Int! = 10, offset: Int! = 0, order_by: [PlansOrderInput!] = [], where: PlansFilterInput): PaginatedPlans!
+  getPlanById(id: String!): Plan
+  getSubscriptions(distinct: DistinctFieldsForSubscriptions, limit: Int! = 10, offset: Int! = 0, order_by: [SubscriptionsOrderInput!] = [], where: SubscriptionsFilterInput): PaginatedSubscriptions
+  getSubscriptionById(id: String!): Subscription
+}
+
+enum DistinctFieldsForSubscriptions {
+  planId
+  paidNumberOfSeats
+  registeredNumberOfUsers
+  invitedNumberOfUsers
+  trialStartDate
+  trialEndDate
+  status
+}
+
+input SubscriptionsOrderInput {
+  direction: OrderDirection!
+  field: SubscriptionOrderField!
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+enum SubscriptionOrderField {
+  paidNumberOfSeats
+  registeredNumberOfUsers
+  invitedNumberOfUsers
+  trialStartDate
+  trialEndDate
+  status
+  createdAt
+  updatedAt
+}
+
+input SubscriptionsFilterInput {
+  _and: [SubscriptionsFilterInput!]
+  _not: [SubscriptionsFilterInput!]
+  _or: [SubscriptionsFilterInput!]
+  id: ID
+  tenantId: FilterStringInput
+  planId: FilterStringInput
+  paymentGatewaySubscriptionId: FilterStringInput
+  paidNumberOfSeats: FilterStringInput
+  registeredNumberOfUsers: FilterStringInput
+  invitedNumberOfUsers: FilterStringInput
+  cancelationReason: FilterStringInput
+  trialStartDate: FilterDateInput
+  trialEndDate: FilterDateInput
+  status: FilterSubscriptionStatusInput
+  createdAt: FilterDateInput
+  updatedAt: FilterDateInput
+}
+
+input FilterStringInput {
+  _contains: String
+  _ends_with: String
+  _eq: String
+  _in: [String!]
+  _is_null: Boolean
+  _neq: String
+  _nin: [String!]
+  _starts_with: String
+}
+
+input FilterDateInput {
+  _eq: String
+  _gt: String
+  _gte: String
+  _in: [String!]
+  _is_null: Boolean
+  _lt: String
+  _lte: String
+  _neq: String
+  _nin: [String!]
+}
+
+input FilterSubscriptionStatusInput {
+  _eq: SubscriptionStatus
+  _in: [SubscriptionStatus!]
+  _is_null: Boolean
+  _neq: SubscriptionStatus
+  _nin: [SubscriptionStatus!]
+}
+
+enum DistinctFieldsForPlans {
+  name
+  productName
+  amount
+  currency
+  recommend
+  trialPeriod
+  durationMonths
+  allowedNumberOfSeats
+}
+
+input PlansOrderInput {
+  direction: OrderDirection!
+  field: PlansOrderField!
+}
+
+enum PlansOrderField {
+  name
+  productName
+  amount
+  trialPeriod
+  durationMonths
+  createdAt
+  updatedAt
+  allowedNumberOfSeats
+}
+
+input PlansFilterInput {
+  _and: [PlansFilterInput!]
+  _not: [PlansFilterInput!]
+  _or: [PlansFilterInput!]
+  id: ID
+  name: FilterStringInput
+  description: FilterStringInput
+  productName: FilterPlanProductsInput
+  paymentGatewayProductId: FilterStringInput
+  allowedNumberOfSeats: FilterStringInput
+  trialPeriod: FilterStringInput
+  durationMonths: FilterStringInput
+  createdAt: FilterDateInput
+  updatedAt: FilterDateInput
+}
+
+input FilterPlanProductsInput {
+  _eq: PlanProducts
+  _in: [PlanProducts!]
+  _is_null: Boolean
+  _neq: PlanProducts
+  _nin: [PlanProducts!]
+}
+
+type Mutation {
+  createSubscription(data: SubscriptionInput!): String!
+  cancelSubscription(data: SubscriptionCancelInput!): CancelSubscriptionResponse!
+  updateSubscriptionById(data: SubscriptionUpdateInput!): Subscription!
+  createPlan(data: PlanInput!): Plan!
+  updatePlanById(data: PlanUpdateInput!): Plan!
+  archivePlan(planId: String!): Plan!
+  createPlanOffer(data: PlanOfferInput!): PlanOffer!
+  updatePlanOfferById(data: PlanOfferUpdateInput!): PlanOffer!
+  archivePlanOffer(id: String!): PlanOffer!
+  createPlanPrice(data: PlanPriceInput!): PlanPrice!
+  updatePlanPriceById(data: PlanPriceUpdateInput!): PlanPrice!
+  archivePlanPrice(id: String!): PlanPrice!
+}
+
+input SubscriptionInput {
+  planPriceId: String!
+  requestedNumberOfSeats: Int!
+}
+
+input SubscriptionCancelInput {
+  cancelationReason: String
+}
+
+input SubscriptionUpdateInput {
+  id: ID
+  requestedNumberOfSeats: Int
+  trialEndDate: DateTime
+  planPriceID: ID
+}
+
+input PlanInput {
+  name: String!
+  description: String!
+  productName: PlanProducts!
+  amount: Float!
+  isVatIncluded: Boolean!
+  currency: String!
+  recommend: Boolean
+  allowedNumberOfSeats: Int! = 10
+  trialPeriod: Int! = 7
+  durationMonths: Int!
+  interval: PlanPriceInterval!
+}
+
+input PlanUpdateInput {
+  id: String!
+  name: String
+  description: String
+  productName: PlanProducts
+  recommend: Boolean
+  trialPeriod: Int
+  durationMonths: Int
+  allowedNumberOfSeats: Int
+}
+
+input PlanOfferInput {
+  planId: String!
+  name: String!
+  description: String
+  offerKey: String!
+  position: Float
+}
+
+input PlanOfferUpdateInput {
+  id: String!
+  name: String!
+  description: String
+  position: Float
+}
+
+input PlanPriceInput {
+  planId: String!
+  amount: Float!
+  isVatIncluded: Boolean!
+  interval: PlanPriceInterval!
+  trialPeriodDays: String!
+  currency: String!
+}
+
+input PlanPriceUpdateInput {
+  id: String!
+  trialPeriodDays: String!
+}

@@ -1,0 +1,97 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table plans {
+  id String [pk]
+  name String [not null]
+  description String [not null]
+  productName products [not null, default: 'UTOPIKAI']
+  paymentGatewayProductId String [not null]
+  recommend Boolean [not null, default: false]
+  trialPeriod Int [not null, default: 7]
+  durationMonths Int
+  allowedNumberOfSeats Int [not null, default: 10]
+  isArchived Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime
+  plan_offers plan_offers [not null]
+  plan_prices plan_prices [not null]
+  subscriptions subscriptions [not null]
+}
+
+Table plan_prices {
+  id String [pk]
+  planId String [not null]
+  stripePriceId String [unique, not null]
+  amount Float [not null]
+  isVatIncluded Boolean [not null, default: true]
+  currency String [not null]
+  interval planInterval [not null]
+  trialPeriodDays String [not null]
+  isArchived Boolean [default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime
+  plans plans [not null]
+}
+
+Table plan_offers {
+  id String [pk]
+  planId String [not null]
+  name String [not null]
+  description String
+  offerKey String [unique, not null]
+  position Int
+  stripeFeatureId String [not null]
+  isArchived Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime
+  plans plans [not null]
+}
+
+Table subscriptions {
+  id String [pk]
+  tenantId String [not null]
+  planId String [not null]
+  paymentGatewaySubscriptionId String [not null]
+  paymentGatewayCustomerId String [not null]
+  paymentGatewayMethodId String
+  paidNumberOfSeats Int [not null]
+  registeredNumberOfUsers Int [not null]
+  invitedNumberOfUsers Int [not null]
+  cancelationReason String
+  trialStartDate DateTime
+  trialEndDate DateTime
+  currentPeriodEnd DateTime
+  status subscriptionStatus [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  plans plans [not null]
+}
+
+Enum planInterval {
+  MONTH
+  YEAR
+}
+
+Enum subscriptionStatus {
+  trialing
+  active
+  incomplete
+  incomplete_expired
+  past_due
+  canceled
+  unpaid
+  paused
+  cancel_at_period_end
+}
+
+Enum products {
+  UTOPIKAI
+}
+
+Ref: plan_prices.planId > plans.id
+
+Ref: plan_offers.planId > plans.id
+
+Ref: subscriptions.planId > plans.id

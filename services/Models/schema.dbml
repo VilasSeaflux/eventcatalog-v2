@@ -1,0 +1,106 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table llms {
+  id String [pk]
+  llmProviderId String [not null]
+  name String [not null]
+  displayName String [not null]
+  logo String
+  description String
+  status LlmStatus [not null, default: 'ACTIVE']
+  backupLlm String
+  inputBaseCost Float [not null]
+  outputBaseCost Float [not null]
+  inputMargin Float [not null]
+  outputMargin Float [not null]
+  inputPrice Float [not null]
+  outputPrice Float [not null]
+  currency String [not null]
+  isFree Boolean [not null]
+  isOpenSource Boolean [not null]
+  isUtopikaiManaged Boolean [not null]
+  isMultiModal Boolean [not null, default: false]
+  isReasoningModel Boolean [not null]
+  isVoiceModeSupported Boolean [not null]
+  canGenerateImages Boolean [not null]
+  isBYK Boolean [not null]
+  isDefault Boolean [not null]
+  isToolUseSupported Boolean [not null]
+  config Json
+  createdBy String
+  isArchived Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  llm_provider llm_providers [not null, note: 'Relation back to the provider that “owns” this LLM']
+  llms_pricing_history llms_pricing_history [not null, note: 'History & tenant linking']
+  tenant_llms tenant_llms [not null]
+  defaultModelProviders llm_providers [not null, note: 'Back‐relations for default/fastDefault']
+  fastDefaultProviders llm_providers [not null]
+}
+
+Table llm_providers {
+  id String [pk]
+  name String [not null]
+  displayName String [not null]
+  logo String
+  apiBase String
+  apiKey String
+  apiVersion String
+  config Json
+  defaultModel String
+  fastDefaultModel String
+  deploymentName String
+  isArchived Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  llms llms [not null, note: 'All LLMs offered by this provider']
+  defaultModel_llm llms [note: 'Which LLM is this provider’s “defaultModel”?']
+  fastDefaultModel_llm llms [note: 'And which is its “fastDefaultModel”?']
+}
+
+Table llms_pricing_history {
+  id String [pk]
+  llmId String [not null]
+  inputBaseCost Float [not null]
+  outputBaseCost Float [not null]
+  inputMargin Float [not null]
+  outputMargin Float [not null]
+  inputPrice Float [not null]
+  outputPrice Float [not null]
+  currency String [not null]
+  validFrom DateTime [not null]
+  validTo DateTime
+  isArchived Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  llm llms [not null]
+}
+
+Table tenant_llms {
+  id String [pk]
+  tenantId String [not null]
+  llmId String [not null]
+  llmEnabled Boolean [not null, default: true]
+  isArchived Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  llm llms [not null]
+}
+
+Enum LlmStatus {
+  ACTIVE
+  DRAFT
+  DEPRECATED
+}
+
+Ref: llms.llmProviderId > llm_providers.id
+
+Ref: llm_providers.defaultModel - llms.id
+
+Ref: llm_providers.fastDefaultModel - llms.id
+
+Ref: llms_pricing_history.llmId > llms.id
+
+Ref: tenant_llms.llmId > llms.id

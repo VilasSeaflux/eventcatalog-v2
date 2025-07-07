@@ -1,0 +1,463 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Represents a provider of LLM services"""
+type LlmProvider {
+  id: ID!
+  name: String!
+  displayName: String!
+  logo: String
+  apiBase: String
+  apiKey: String
+  apiVersion: String
+  config: String
+  defaultModel: String
+  fastDefaultModel: String
+  deploymentName: String
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Represents a Language Learning Model"""
+type Llm {
+  id: ID!
+  llmProviderId: ID!
+  name: String!
+  displayName: String!
+  logo: String
+  description: String
+  status: LlmStatus!
+  backupLlm: ID
+  inputBaseCost: Float!
+  outputBaseCost: Float!
+  inputMargin: Float!
+  outputMargin: Float!
+  inputPrice: Float!
+  outputPrice: Float!
+  currency: String!
+  isFree: Boolean!
+  isOpenSource: Boolean!
+  isUtopikaiManaged: Boolean!
+  isMultiModal: Boolean!
+  isReasoningModel: Boolean!
+  isVoiceModeSupported: Boolean!
+  canGenerateImages: Boolean!
+  isBYK: Boolean!
+  isDefault: Boolean!
+  isToolUseSupported: Boolean!
+  config: String
+  createdBy: ID
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum LlmStatus {
+  ACTIVE
+  DRAFT
+  DEPRECATED
+}
+
+"""Represents the pricing history of an LLM"""
+type LlmPricingHistory {
+  id: ID!
+  llmId: ID!
+  inputBaseCost: Float!
+  outputBaseCost: Float!
+  inputMargin: Float!
+  outputMargin: Float!
+  inputPrice: Float!
+  outputPrice: Float!
+  currency: String!
+  validFrom: DateTime!
+  validTo: DateTime
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""Represents a tenant-specific LLM configuration"""
+type TenantLlm {
+  id: ID!
+  tenantId: ID!
+  llmId: ID!
+  llmEnabled: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""Paginated list of LLM Providers"""
+type PaginatedLlmProviders {
+  llmProviders: [LlmProvider!]!
+  limit: Int!
+  offset: Int!
+  total: Int!
+}
+
+"""Paginated list of LLMs"""
+type PaginatedLlm {
+  llms: [Llm!]!
+  limit: Int!
+  offset: Int!
+  total: Int!
+}
+
+"""Paginated list of LLM Pricing Histories"""
+type PaginatedLlmPricingHistory {
+  llmPricingHistory: [LlmPricingHistory!]!
+  limit: Int!
+  offset: Int!
+  total: Int!
+}
+
+"""Paginated list of Tenant LLMs"""
+type PaginatedTenantLlm {
+  tenantLlms: [TenantLlm!]!
+  limit: Int!
+  offset: Int!
+  total: Int!
+}
+
+type Query {
+  getTenantLlmById(id: String!): TenantLlm!
+  getLlmById(id: String!): Llm!
+  getTenantLlmsByTenantId(limit: Int! = 10, offset: Int! = 0, order_by: [TenantLlmsOrderInput!], where: TenantLlmsFilterInput): PaginatedTenantLlm!
+  getTenantLlms(includeArchived: Boolean! = false, limit: Int! = 10, offset: Int! = 0, order_by: [TenantLlmsOrderInput!], where: TenantLlmsFilterInput): PaginatedTenantLlm!
+  getLlmProviderById(id: String!): LlmProvider!
+  getLlms(includeArchived: Boolean! = false, limit: Int! = 10, offset: Int! = 0, order_by: [LlmOrderInput!], where: LlmFilterInput, distinct: DistinctFieldsForLlms): PaginatedLlm!
+  getLlmProviders(includeArchived: Boolean! = false, limit: Int! = 10, offset: Int! = 0, order_by: [LlmProviderOrderInput!], distinct: DistinctFieldsForLlmProviders, where: LlmProviderFilterInput): PaginatedLlmProviders!
+  getLlmPricingHistoryByLlmId(includeArchived: Boolean! = false, llmId: String!, limit: Int! = 10, offset: Int! = 0, order_by: [LlmPricingHistoryOrderInput!], distinct: DistinctFieldsForLlmPricingHistory, where: LlmPricingHistoryFilterInput): [PaginatedLlmPricingHistory!]!
+}
+
+"""Order input for Tenant LLMs"""
+input TenantLlmsOrderInput {
+  direction: OrderDirection!
+  field: TenantLlmsOrderField!
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+enum TenantLlmsOrderField {
+  createdAt
+  updatedAt
+}
+
+"""Filter input for Tenant LLMs"""
+input TenantLlmsFilterInput {
+  _and: [TenantLlmsFilterInput!]
+  _not: [TenantLlmsFilterInput!]
+  _or: [TenantLlmsFilterInput!]
+  id: ID
+  createdAt: FilterDateInput
+  updatedAt: FilterDateInput
+  tenantId: ID
+  llmId: ID
+}
+
+"""Date filter input"""
+input FilterDateInput {
+  _eq: DateTime
+  _gt: DateTime
+  _gte: DateTime
+  _in: [DateTime!]
+  _is_null: Boolean
+  _lt: DateTime
+  _lte: DateTime
+  _neq: DateTime
+  _nin: [DateTime!]
+}
+
+"""Order input for LLMs"""
+input LlmOrderInput {
+  direction: OrderDirection!
+  field: LlmOrderField!
+}
+
+enum LlmOrderField {
+  name
+  description
+  status
+  inputBaseCost
+  outputBaseCost
+  inputMargin
+  outputMargin
+  inputPrice
+  outputPrice
+  currency
+  config
+  createdAt
+  updatedAt
+  displayName
+}
+
+"""Filter input for LLMs"""
+input LlmFilterInput {
+  _and: [LlmFilterInput!]
+  _not: [LlmFilterInput!]
+  _or: [LlmFilterInput!]
+  id: ID
+  backupLlm: ID
+  llmProviderId: ID
+  name: FilterStringInput
+  displayName: FilterStringInput
+  description: FilterStringInput
+  status: FilterLlmStatusInput
+  inputBaseCost: FilterStringInput
+  outputBaseCost: FilterStringInput
+  inputMargin: FilterStringInput
+  outputMargin: FilterStringInput
+  inputPrice: FilterStringInput
+  outputPrice: FilterStringInput
+  currency: FilterStringInput
+  isFree: Boolean
+  isOpenSource: Boolean
+  isUtopikaiManaged: Boolean
+  isMultiModal: Boolean
+  isReasoningModel: Boolean
+  isVoiceModeSupported: Boolean
+  canGenerateImages: Boolean
+  isBYK: Boolean
+  isDefault: Boolean
+  isToolUseSupported: Boolean
+  config: FilterStringInput
+  createdAt: FilterDateInput
+  updatedAt: FilterDateInput
+}
+
+"""String filter input"""
+input FilterStringInput {
+  _contains: String
+  _ends_with: String
+  _eq: String
+  _in: [String!]
+  _is_null: Boolean
+  _neq: String
+  _nin: [String!]
+  _starts_with: String
+}
+
+"""Input for filtering LLM status"""
+input FilterLlmStatusInput {
+  _eq: LlmStatus
+  _in: [LlmStatus!]
+  _is_null: Boolean
+  _neq: LlmStatus
+  _nin: [LlmStatus!]
+}
+
+enum DistinctFieldsForLlms {
+  name
+}
+
+"""Order input for LLM Providers"""
+input LlmProviderOrderInput {
+  direction: OrderDirection!
+  field: LlmProviderOrderField!
+}
+
+enum LlmProviderOrderField {
+  id
+  name
+  deploymentName
+  createdAt
+  updatedAt
+  displayName
+}
+
+enum DistinctFieldsForLlmProviders {
+  name
+}
+
+"""Filter input for LLM Providers"""
+input LlmProviderFilterInput {
+  _and: [LlmProviderFilterInput!]
+  _not: [LlmProviderFilterInput!]
+  _or: [LlmProviderFilterInput!]
+  id: ID
+  fastDefaultModel: ID
+  defaultModel: ID
+  name: FilterStringInput
+  displayName: FilterStringInput
+  apiBase: FilterStringInput
+  apiVersion: FilterStringInput
+  config: FilterStringInput
+  deploymentName: FilterStringInput
+  createdAt: FilterDateInput
+  updatedAt: FilterDateInput
+}
+
+"""Order input for LLM Pricing History"""
+input LlmPricingHistoryOrderInput {
+  direction: OrderDirection!
+  field: LlmPricingHistoryOrderField!
+}
+
+enum LlmPricingHistoryOrderField {
+  inputBaseCost
+  outputBaseCost
+  inputMargin
+  outputMargin
+  inputPrice
+  outputPrice
+  currency
+  validFrom
+  validTo
+  createdAt
+  updatedAt
+}
+
+enum DistinctFieldsForLlmPricingHistory {
+  name
+  productName
+  recommend
+  trialPeriod
+  durationMonths
+}
+
+"""Filter input for LLM Pricing History"""
+input LlmPricingHistoryFilterInput {
+  _and: [LlmPricingHistoryFilterInput!]
+  _not: [LlmPricingHistoryFilterInput!]
+  _or: [LlmPricingHistoryFilterInput!]
+  id: ID
+  inputBaseCost: FilterStringInput
+  outputBaseCost: FilterStringInput
+  inputMargin: FilterStringInput
+  outputMargin: FilterStringInput
+  inputPrice: FilterStringInput
+  outputPrice: FilterStringInput
+  currency: FilterStringInput
+  validFrom: FilterDateInput
+  validTo: FilterDateInput
+  createdAt: FilterDateInput
+  updatedAt: FilterDateInput
+}
+
+type Mutation {
+  createLlm(data: LlmInput!): Llm!
+  updateLlmById(data: LlmUpdateInput!): Llm!
+  archiveLlmById(id: String!): Llm!
+  createLlmProvider(data: LlmProviderInput!): LlmProvider!
+  updateLlmProviderById(data: LlmProviderUpdateInput!): LlmProvider!
+  archiveLlmProviderById(id: String!): LlmProvider!
+  createTenantLlm(data: AddTenantLlmInput!): TenantLlm!
+  updateTenantLlmById(data: UpdateTenantLlmInput!): TenantLlm!
+  updateTenantLlmByLlmId(data: UpdateTenantLlmByLlmIdInput!): TenantLlm!
+  archiveTenantLlmById(id: String!): TenantLlm!
+}
+
+"""Input for creating a new LLM"""
+input LlmInput {
+  llmProviderId: ID!
+  name: String!
+  displayName: String!
+  logo: String
+  description: String
+  status: LlmStatus!
+  backupLlm: ID
+  inputBaseCost: Float!
+  outputBaseCost: Float!
+  inputMargin: Float!
+  outputMargin: Float!
+  currency: String!
+  isFree: Boolean!
+  isOpenSource: Boolean!
+  isUtopikaiManaged: Boolean!
+  isMultiModal: Boolean!
+  isReasoningModel: Boolean!
+  isVoiceModeSupported: Boolean!
+  canGenerateImages: Boolean!
+  isBYK: Boolean!
+  isDefault: Boolean!
+  isToolUseSupported: Boolean!
+  config: String
+  createdBy: ID
+}
+
+"""Input for updating an existing LLM"""
+input LlmUpdateInput {
+  id: ID!
+  llmProviderId: ID
+  name: String
+  displayName: String
+  logo: String
+  description: String
+  status: LlmStatus
+  backupLlm: ID
+  inputBaseCost: Float
+  outputBaseCost: Float
+  inputMargin: Float
+  outputMargin: Float
+  currency: String
+  isFree: Boolean
+  isOpenSource: Boolean
+  isUtopikaiManaged: Boolean
+  isMultiModal: Boolean
+  isReasoningModel: Boolean
+  isVoiceModeSupported: Boolean
+  canGenerateImages: Boolean
+  isBYK: Boolean
+  isDefault: Boolean
+  isToolUseSupported: Boolean
+  config: String
+  createdBy: ID
+}
+
+"""Input for creating a new LLM Provider"""
+input LlmProviderInput {
+  name: String!
+  displayName: String!
+  logo: String
+  apiBase: String
+  apiKey: String
+  apiVersion: String
+  config: String
+  defaultModel: ID
+  fastDefaultModel: ID
+  deploymentName: String
+}
+
+"""Input for updating an existing LLM Provider"""
+input LlmProviderUpdateInput {
+  id: String!
+  name: String
+  displayName: String
+  logo: String
+  apiBase: String
+  apiKey: String
+  apiVersion: String
+  config: String
+  defaultModel: String!
+  fastDefaultModel: String
+  deploymentName: String
+}
+
+"""Input for adding a Tenant LLM"""
+input AddTenantLlmInput {
+  tenantId: ID!
+  llmId: ID!
+  llmEnabled: Boolean!
+}
+
+"""Input for updating a Tenant LLM"""
+input UpdateTenantLlmInput {
+  id: ID!
+  llmEnabled: Boolean
+}
+
+"""Input for updating a Tenant LLM"""
+input UpdateTenantLlmByLlmIdInput {
+  llmId: ID!
+  llmEnabled: Boolean
+}

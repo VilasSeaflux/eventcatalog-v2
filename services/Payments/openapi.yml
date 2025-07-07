@@ -1,0 +1,49 @@
+openapi: 3.0.0
+paths:
+  /health:
+    get:
+      operationId: AppController_healthCheck
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Health
+  /payments/health1:
+    get:
+      operationId: PaymentsController_test
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Payments API
+  /payments/health2:
+    get:
+      operationId: PaymentsController_test1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Payments API
+  /payments/webhook:
+    post:
+      operationId: PaymentsController_handleWebhook
+      summary: Webhook will work with Stripe Webhook
+      description: Webhook will work with Stripe Webhook
+      parameters: []
+      responses:
+        '204':
+          description: Webhook received successfully
+      tags:
+        - Payments API
+info:
+  title: Payments API
+  description: The Payments API description
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas: {}

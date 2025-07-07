@@ -1,0 +1,40 @@
+---
+# id of your service, used for slugs and references in EventCatalog.
+id: Docstore
+
+# Display name of the Service, rendered in EventCatalog
+name: Docstore
+
+# Version of the Service
+version: 1.0.2
+
+# Short summary of your Service
+summary: |
+  Service that contains order related information
+
+specifications:
+- type: openapi
+  path: openapi.yml
+  name: OpenAPI Specification
+- type: asyncapi
+  path: asyncapi.yml
+  name: AsyncAPI Specification
+
+receives:
+  - id: docstores-queue
+    version: 1.0.0
+
+sends:
+  - id: docstore-created
+    version: 1.0.0
+---
+
+## Overview
+
+This Docstore service gives API consumers the ability to produce Docstore in the systems. Events are raised from this system for downstream consumption.
+
+<NodeGraph />
+---
+<Schema file="schema.dbml" title="DBML" lang="prisma"/>
+---
+<Schema file="schema.graphql" title="graphql" lang="graphql"/>

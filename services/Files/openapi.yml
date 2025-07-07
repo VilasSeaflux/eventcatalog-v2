@@ -1,0 +1,532 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      operationId: AppController_home
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+      tags: &ref_0
+        - Health Endpoint
+  /healthz:
+    get:
+      operationId: AppController_healthCheck
+      parameters: []
+      responses:
+        '200':
+          description: Server is up and running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+      tags: *ref_0
+  /public-files:
+    get:
+      operationId: FilesController_getAllPublicFiles
+      parameters:
+        - name: distinct
+          required: false
+          in: query
+          description: The field name to be distinct
+          schema:
+            enum:
+              - filename
+              - awsETag
+              - status
+              - metadata
+              - ownerId
+              - uploadUrl
+              - downloadUrl
+              - private
+              - bucketName
+            type: string
+        - name: order_by
+          required: false
+          in: query
+          style: form
+          explode: true
+          schema:
+            type: object
+          example: '[{"filename": "ASC"}]'
+        - name: where
+          required: false
+          in: query
+          style: form
+          explode: true
+          schema:
+            type: object
+          example: '[{"filename": "customer1,customer2"}]'
+        - name: offset
+          required: false
+          in: query
+          description: The offset of pagination
+          example: 0
+          schema:
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: The limit of pagination
+          example: 10
+          schema:
+            type: number
+      responses:
+        '200':
+          description: A list of public files with pagination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileCreatedListResponseDto'
+      tags: &ref_1
+        - Files API
+  /private-files:
+    get:
+      operationId: FilesController_getAllPrivateFiles
+      parameters:
+        - name: distinct
+          required: false
+          in: query
+          description: The field name to be distinct
+          schema:
+            enum:
+              - filename
+              - awsETag
+              - status
+              - metadata
+              - ownerId
+              - uploadUrl
+              - downloadUrl
+              - private
+              - bucketName
+            type: string
+        - name: order_by
+          required: false
+          in: query
+          style: form
+          explode: true
+          schema:
+            type: object
+          example: '[{"filename": "asc"}]'
+        - name: where
+          required: false
+          in: query
+          style: form
+          explode: true
+          schema:
+            type: object
+          example: '[{"filename": "customer1,customer2"}]'
+        - name: offset
+          required: false
+          in: query
+          description: The offset of pagination
+          example: 0
+          schema:
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: The limit of pagination
+          example: 10
+          schema:
+            type: number
+      responses:
+        '200':
+          description: A list of private files with pagination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileCreatedListResponseDto'
+      tags: *ref_1
+  /public-file/{id}:
+    get:
+      operationId: FilesController_getPublicFileById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "\t"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileCreatedResponseDto'
+        '404':
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+      tags: *ref_1
+    put:
+      operationId: FilesController_updatePublicFile
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileUpdateInput'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+      tags: *ref_1
+    delete:
+      operationId: FilesController_deletePublicFile
+      parameters:
+        - name: id-token
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+        '204':
+          description: File deleted succesfully
+        '404':
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+      tags: *ref_1
+  /private-file/{id}:
+    get:
+      operationId: FilesController_getPrivateFileById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: File with provided ID found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileCreatedResponseDto'
+        '404':
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+      tags: *ref_1
+    put:
+      operationId: FilesController_updatePrivateFile
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileUpdateInput'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+      tags: *ref_1
+    delete:
+      operationId: FilesController_deletePrivateFile
+      parameters:
+        - name: id-token
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+        '204':
+          description: File deleted succesfully
+        '404':
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+      tags: *ref_1
+  /public-file:
+    post:
+      operationId: FilesController_createPublicFile
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileCreateInput'
+      responses:
+        '201':
+          description: File is created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '502':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error:
+                  code: InvalidRequest
+                  message: senderNumber is not a valid number
+      tags: *ref_1
+  /private-file:
+    post:
+      operationId: FilesController_createPrivateFile
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileCreateInput'
+      responses:
+        '201':
+          description: File is created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '502':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error:
+                  code: InvalidRequest
+                  message: senderNumber is not a valid number
+      tags: *ref_1
+info:
+  title: Files API
+  description: The Files REST API provides an interface to perform CRUD operations of files
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+      required:
+        - status
+    FileCreatedResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6664ca2f-e644-482f-a521-45017ee92795
+        name:
+          type: string
+          example: Random File
+        ownerId:
+          type: string
+          example: 3fdd2a5c-7fa9-4346-9e79-ef948b17fb76
+        status:
+          type: string
+          example: active
+        folderName:
+          type: string
+          example: Random Folder
+        bucketName:
+          type: string
+          example: Random Bucket
+        createdAt:
+          type: string
+          example: '2022-12-06T05:39:18Z'
+        updatedAt:
+          type: string
+          example: '2022-12-06T05:39:18Z'
+        fileUrl:
+          type: string
+          example: https://storage.example.com/files/Random_File.pdf
+        preSignedUrl:
+          type: string
+          example: >-
+            https://storage.example.com/presigned/random_file_upload?token=abc123xyz
+      required:
+        - id
+        - name
+        - ownerId
+        - status
+        - folderName
+        - bucketName
+        - createdAt
+        - updatedAt
+    FileCreatedListResponseDto:
+      type: object
+      properties:
+        meta:
+          type: object
+          properties:
+            offset:
+              required: true
+              type: number
+            limit:
+              required: true
+              type: number
+            total:
+              required: true
+              type: number
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileCreatedResponseDto'
+      required:
+        - meta
+        - data
+    ErrorDto:
+      type: object
+      properties:
+        code:
+          type: string
+          example: RESOURCE_NOT_FOUND
+        message:
+          type: string
+          example: The requested resource does not exist.
+      required:
+        - code
+        - message
+    ErrorResponseDto:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDto'
+      required:
+        - error
+    FileCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of file
+          default: name
+          example: Random file
+        ownerId:
+          type: string
+          description: The owner id of file
+          nullable: true
+          example: 3fdd2a5c-7fa9-4346-9e79-ef948b17fb76
+        status:
+          type: string
+          description: The status of file
+          nullable: true
+          example: active
+        folderName:
+          type: string
+          description: folderName
+          nullable: true
+          example: Randome Folder
+        bucketName:
+          type: string
+          description: The aws bucket name of file
+          nullable: true
+          example: Random Bucket
+      required:
+        - name
+        - ownerId
+        - status
+        - folderName
+        - bucketName
+    File:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6664ca2f-e644-482f-a521-45017ee92795
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        name:
+          type: string
+          example: Random File
+        status:
+          type: string
+          example: active
+        fileUrl:
+          type: string
+        ownerId:
+          type: string
+          example: 3fdd2a5c-7fa9-4346-9e79-ef948b17fb76
+        folderName:
+          type: string
+          example: Random Folder
+        bucketName:
+          type: string
+          example: Random Bucket
+        preSignedUrl:
+          type: string
+      required:
+        - id
+        - createdAt
+        - updatedAt
+    FileUpdateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of file
+          nullable: true
+        folderName:
+          type: string
+          description: folderName
+          nullable: true
+        status:
+          type: string
+          description: The status of file
+      required:
+        - name
+        - folderName
+        - status

@@ -1,0 +1,694 @@
+asyncapi: 2.5.0
+info:
+  title: Tokens Microservice Async API
+  description: Microservice for managing tokens
+  version: '1.0'
+  contact: {}
+tags: []
+servers:
+  Server:
+    url: >-
+      amqp://utopikai-rag-solace-dev-c18f75dc81ef2e53.elb.eu-west-1.amazonaws.com:5672/
+    protocol: amqp
+    protocolVersion: '1'
+    description: Allows you to connect using the AMQP protocol to Messaging Broker.
+    security:
+      - user-password: []
+    variables:
+      port:
+        description: >-
+          Secure connection (TLS) is available through port 5671. Non secure
+          connection available through port 5672.
+        default: '5672'
+    bindings: {}
+components:
+  securitySchemes:
+    user-password:
+      type: userPassword
+  schemas:
+    PreprocessingTokensUsageRequest:
+      type: object
+      properties:
+        userId:
+          type: object
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        llmId:
+          type: string
+          format: uuid
+        connectorId:
+          type: object
+          format: uuid
+        assistantId:
+          type: string
+        tokenType:
+          type: string
+          enum: &ref_0
+            - TEXT
+            - AUDIO
+            - VIDEO
+            - IMAGE
+            - VISION
+        usageType:
+          type: string
+          enum: &ref_1
+            - INGESTION
+            - CHAT
+        inputTokensConsumed:
+          type: number
+        outputTokensConsumed:
+          type: number
+        consumeTime:
+          type: string
+          format: date-time
+      required:
+        - tenantId
+        - llmId
+        - inputTokensConsumed
+        - outputTokensConsumed
+        - consumeTime
+    TokensCreatedRequest:
+      type: object
+      properties:
+        tokenId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        llmId:
+          type: string
+          format: uuid
+        connectorId:
+          type: string
+          format: uuid
+        assistantId:
+          type: string
+        tokenType:
+          type: string
+        usageType:
+          type: string
+        isFree:
+          type: boolean
+        inputTokensConsumed:
+          type: number
+        outputTokensConsumed:
+          type: number
+        consumedTime:
+          type: string
+          format: date-time
+        inputCost:
+          type: number
+        outputCost:
+          type: number
+        inputMargin:
+          type: number
+        outputMargin:
+          type: number
+        finalCharge:
+          type: number
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - tokenId
+        - tenantId
+        - llmId
+        - isFree
+        - inputTokensConsumed
+        - outputTokensConsumed
+        - consumedTime
+        - inputCost
+        - outputCost
+        - inputMargin
+        - outputMargin
+        - finalCharge
+        - currency
+        - createdAt
+    IndexingEmbeddingsTokensUsageRequest:
+      type: object
+      properties:
+        userId:
+          type: object
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        llmId:
+          type: string
+          format: uuid
+        connectorId:
+          type: object
+          format: uuid
+        assistantId:
+          type: string
+        tokenType:
+          type: string
+          enum: *ref_0
+        usageType:
+          type: string
+          enum: *ref_1
+        inputTokensConsumed:
+          type: number
+        outputTokensConsumed:
+          type: number
+        consumeTime:
+          type: string
+          format: date-time
+      required:
+        - tenantId
+        - llmId
+        - inputTokensConsumed
+        - outputTokensConsumed
+        - consumeTime
+    InferenceEmbeddingsTokensUsageRequest:
+      type: object
+      properties:
+        userId:
+          type: object
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        llmId:
+          type: string
+          format: uuid
+        connectorId:
+          type: object
+          format: uuid
+        assistantId:
+          type: string
+        tokenType:
+          type: string
+          enum: *ref_0
+        usageType:
+          type: string
+          enum: *ref_1
+        inputTokensConsumed:
+          type: number
+        outputTokensConsumed:
+          type: number
+        consumeTime:
+          type: string
+          format: date-time
+      required:
+        - tenantId
+        - llmId
+        - inputTokensConsumed
+        - outputTokensConsumed
+        - consumeTime
+    BackgroundLLMTokensUsageRequest:
+      type: object
+      properties:
+        userId:
+          type: object
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        llmId:
+          type: string
+          format: uuid
+        connectorId:
+          type: object
+          format: uuid
+        assistantId:
+          type: string
+        tokenType:
+          type: string
+          enum: *ref_0
+        usageType:
+          type: string
+          enum: *ref_1
+        inputTokensConsumed:
+          type: number
+        outputTokensConsumed:
+          type: number
+        consumeTime:
+          type: string
+          format: date-time
+      required:
+        - tenantId
+        - llmId
+        - inputTokensConsumed
+        - outputTokensConsumed
+        - consumeTime
+    APIServerLLMTokensUsageRequest:
+      type: object
+      properties:
+        userId:
+          type: object
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        llmId:
+          type: string
+          format: uuid
+        connectorId:
+          type: object
+          format: uuid
+        assistantId:
+          type: string
+        tokenType:
+          type: string
+          enum: *ref_0
+        usageType:
+          type: string
+          enum: *ref_1
+        inputTokensConsumed:
+          type: number
+        outputTokensConsumed:
+          type: number
+        consumeTime:
+          type: string
+          format: date-time
+      required:
+        - tenantId
+        - llmId
+        - inputTokensConsumed
+        - outputTokensConsumed
+        - consumeTime
+    LLMCreatedRequest:
+      type: object
+      properties:
+        llmId:
+          type: string
+          example: f34d6241-b508-416f-9d25-c5f6861292ba
+          description: Unique identifier for the LLM
+          format: uuid
+        llmProviderId:
+          type: string
+          example: 58aca895-8a1a-4c59-82f9-a12b6a1c6d19
+          description: Unique identifier for the LLM provider
+          format: uuid
+        name:
+          type: string
+          example: HyperMind-X
+          description: Name of the LLM
+        logo:
+          type: string
+          example: https://example.com/llm-logo1.png
+          description: URL to the logo of the LLM
+        description:
+          type: string
+          example: >-
+            A next-gen reasoning and multitask model designed for complex
+            problem solving and image generation
+          description: Description of the LLM
+        status:
+          type: string
+          example: ACTIVE
+          description: Status of the LLM
+          enum:
+            - ACTIVE
+            - DRAFT
+            - DEPRECATED
+        backupLlm:
+          type: string
+          example: a6a4c914-5c9d-441b-bf9e-4a8f8d8f7c9c
+          description: UUID of the backup LLM
+          format: uuid
+        inputBaseCost:
+          type: number
+          example: 0.075
+          description: Input base cost of the LLM
+        outputBaseCost:
+          type: number
+          example: 0.15
+          description: Output base cost of the LLM
+        inputMargin:
+          type: number
+          example: 0.3
+          description: Input margin for the LLM
+        outputMargin:
+          type: number
+          example: 0.6
+          description: Output margin for the LLM
+        inputPrice:
+          type: number
+          example: 0.975
+          description: Input price of the LLM
+        outputPrice:
+          type: number
+          example: 1.95
+          description: Output price of the LLM
+        currency:
+          type: string
+          example: USD
+          description: Currency for the LLM price
+        isFree:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is free
+        isOpenSource:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is open source
+        isUtopikaiManaged:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is managed by Utopikai
+        isMultimodal:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is multimodal
+        isReasoningModel:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is a reasoning model
+        isVoiceModeSupported:
+          type: boolean
+          example: true
+          description: Indicates if the LLM supports voice mode
+        canGenerateImages:
+          type: boolean
+          example: true
+          description: Indicates if the LLM can generate images
+        isBYK:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is BYK
+        isDefault:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is the default
+        isToolUseSupported:
+          type: boolean
+          example: false
+          description: Indicates if the LLM supports tool use
+        config:
+          type: string
+          example: '{"temperature": 0.7, "max_tokens": 1024, "top_p": 0.9}'
+          description: Configuration settings in JSON format
+          format: json
+        createdBy:
+          type: string
+          example: fada395-8a1a-4c59-82f9-a23231c6d10
+          description: UUID of the creator
+          format: uuid
+        isArchived:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is archived
+        createdAt:
+          type: string
+          example: '2025-04-08T10:00:00Z'
+          description: Creation date of the LLM
+          format: date-time
+        updatedAt:
+          type: string
+          example: ''
+          description: Last update date of the LLM
+          format: date-time
+      required:
+        - llmId
+        - llmProviderId
+        - name
+        - description
+        - status
+        - inputBaseCost
+        - outputBaseCost
+        - inputMargin
+        - outputMargin
+        - inputPrice
+        - outputPrice
+        - currency
+        - isFree
+        - isOpenSource
+        - isUtopikaiManaged
+        - isMultimodal
+        - isReasoningModel
+        - isVoiceModeSupported
+        - canGenerateImages
+        - isBYK
+        - isDefault
+        - isToolUseSupported
+        - config
+        - createdAt
+    LLMUpdatedRequest:
+      type: object
+      properties:
+        llmId:
+          type: string
+          example: f34d6241-b508-416f-9d25-c5f6861292ba
+          description: Unique identifier for the LLM
+          format: uuid
+        llmProviderId:
+          type: string
+          example: 58aca895-8a1a-4c59-82f9-a12b6a1c6d19
+          description: Unique identifier for the LLM provider
+          format: uuid
+        name:
+          type: string
+          example: HyperMind-X
+          description: Name of the LLM
+        logo:
+          type: string
+          example: https://example.com/llm-logo1.png
+          description: URL to the logo of the LLM
+        description:
+          type: string
+          example: >-
+            A next-gen reasoning and multitask model designed for complex
+            problem solving and image generation
+          description: Description of the LLM
+        status:
+          type: string
+          example: ACTIVE
+          description: Status of the LLM
+          enum:
+            - ACTIVE
+            - DRAFT
+            - DEPRECATED
+        backupLlm:
+          type: string
+          example: a6a4c914-5c9d-441b-bf9e-4a8f8d8f7c9c
+          description: UUID of the backup LLM
+          format: uuid
+        inputBaseCost:
+          type: number
+          example: 0.075
+          description: Input base cost of the LLM
+        outputBaseCost:
+          type: number
+          example: 0.15
+          description: Output base cost of the LLM
+        inputMargin:
+          type: number
+          example: 0.3
+          description: Input margin for the LLM
+        outputMargin:
+          type: number
+          example: 0.6
+          description: Output margin for the LLM
+        inputPrice:
+          type: number
+          example: 0.975
+          description: Input price of the LLM
+        outputPrice:
+          type: number
+          example: 1.95
+          description: Output price of the LLM
+        currency:
+          type: string
+          example: USD
+          description: Currency for the LLM price
+        isFree:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is free
+        isOpenSource:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is open source
+        isUtopikaiManaged:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is managed by Utopikai
+        isMultimodal:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is multimodal
+        isReasoningModel:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is a reasoning model
+        isVoiceModeSupported:
+          type: boolean
+          example: true
+          description: Indicates if the LLM supports voice mode
+        canGenerateImages:
+          type: boolean
+          example: true
+          description: Indicates if the LLM can generate images
+        isBYK:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is BYK
+        isDefault:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is the default
+        isToolUseSupported:
+          type: boolean
+          example: false
+          description: Indicates if the LLM supports tool use
+        config:
+          type: string
+          example: '{"temperature": 0.7, "max_tokens": 1024, "top_p": 0.9}'
+          description: Configuration settings in JSON format
+          format: json
+        createdBy:
+          type: string
+          example: fada395-8a1a-4c59-82f9-a23231c6d10
+          description: UUID of the creator
+          format: uuid
+        isArchived:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is archived
+        createdAt:
+          type: string
+          example: '2025-04-08T10:00:00Z'
+          description: Creation date of the LLM
+          format: date-time
+        updatedAt:
+          type: string
+          example: '2025-04-08T11:54:22Z'
+          description: Last update date of the LLM
+          format: date-time
+      required:
+        - llmId
+        - llmProviderId
+        - name
+        - description
+        - status
+        - inputBaseCost
+        - outputBaseCost
+        - inputMargin
+        - outputMargin
+        - inputPrice
+        - outputPrice
+        - currency
+        - isFree
+        - isOpenSource
+        - isUtopikaiManaged
+        - isMultimodal
+        - isReasoningModel
+        - isVoiceModeSupported
+        - canGenerateImages
+        - isBYK
+        - config
+        - createdAt
+    LLMArchivedRequest:
+      type: object
+      properties:
+        llmId:
+          type: string
+          example: f34d6241-b508-416f-9d25-c5f6861292ba
+          description: Unique identifier for the LLM
+          format: uuid
+        archivedAt:
+          type: string
+          example: '2025-04-08T11:54:22Z'
+          description: Archived date of the LLM
+          format: date-time
+      required:
+        - llmId
+        - archivedAt
+defaultContentType: application/json
+channels:
+  preprocessing.tokens-used:
+    subscribe:
+      summary: Preprocessing Tokens Used Event
+      description: This method is used to subscribe to preprocessing tokens used event
+      message:
+        name: preprocessing-microservice/v1/event/tokens/preprocessing-tokens-used
+        payload:
+          $ref: '#/components/schemas/PreprocessingTokensUsageRequest'
+        x-identifier: preprocessing.tokens-used.event
+  tokens.tokens-created:
+    publish:
+      summary: Tokens Created Event
+      description: >-
+        This method is used to publish tokens creation event. Each time a tenant
+        user consumes some tokens, this event is published
+      message:
+        name: tokens-microservice/v1/event/tokens/tokens-created
+        payload:
+          $ref: '#/components/schemas/TokensCreatedRequest'
+        x-identifier: tokens.tokens-created.event
+  indexing.tokens-used:
+    subscribe:
+      summary: Indexing Tokens Used Event
+      description: This method is used to subscribe to Indexing tokens used event
+      message:
+        name: indexing-microservice/v1/event/tokens/embeddings-tokens-used
+        payload:
+          $ref: '#/components/schemas/IndexingEmbeddingsTokensUsageRequest'
+        x-identifier: indexing.tokens-used.event
+  inference.tokens-used:
+    subscribe:
+      summary: Inference Tokens Used Event
+      description: This method is used to subscribe to Inference tokens used event
+      message:
+        name: inference-microservice/v1/event/tokens/embeddings-tokens-used
+        payload:
+          $ref: '#/components/schemas/InferenceEmbeddingsTokensUsageRequest'
+        x-identifier: inference.tokens-used.event
+  background.tokens-used:
+    subscribe:
+      summary: Background Tokens Used Event
+      description: This method is used to subscribe to background tokens used event
+      message:
+        name: background-microservice/v1/event/tokens/llm-tokens-used
+        payload:
+          $ref: '#/components/schemas/BackgroundLLMTokensUsageRequest'
+        x-identifier: background.tokens-used.event
+  rag.tokens-used:
+    subscribe:
+      summary: Rag Tokens Used Event
+      description: This method is used to subscribe to rag tokens used event
+      message:
+        name: rag-microservice/v1/event/tokens/llm-tokens-used
+        payload:
+          $ref: '#/components/schemas/APIServerLLMTokensUsageRequest'
+        x-identifier: rag.tokens-used.event
+  models.llm-created:
+    subscribe:
+      summary: LLM Created Event
+      description: This method is used to subscribe to LLM created event
+      message:
+        name: models-microservice/v1/event/llms/llm-created
+        payload:
+          $ref: '#/components/schemas/LLMCreatedRequest'
+        x-identifier: models.llm-created.event
+  models.llm-updated:
+    subscribe:
+      summary: LLM Updated Event
+      description: This method is used to subscribe to LLM updated event
+      message:
+        name: models-microservice/v1/event/llms/llm-updated
+        payload:
+          $ref: '#/components/schemas/LLMUpdatedRequest'
+        x-identifier: models.llm-updated.event
+  models.llm-archived:
+    subscribe:
+      summary: LLM Archived Event
+      description: This method is used to subscribe to LLM archived event
+      message:
+        name: models-microservice/v1/event/llms/llm-archived
+        payload:
+          $ref: '#/components/schemas/LLMArchivedRequest'
+        x-identifier: models.llm-archived.event

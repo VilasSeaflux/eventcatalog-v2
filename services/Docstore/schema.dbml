@@ -1,0 +1,36 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table PrivateFile {
+  id String [pk]
+  name String
+  fileUrl String
+  ownerId String
+  bucketName String
+  folderName String
+  status String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table PublicFile {
+  id String [pk]
+  name String
+  fileUrl String
+  ownerId String
+  bucketName String
+  folderName String
+  status String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Bucket {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  email String
+  userId String
+  identityId String
+}

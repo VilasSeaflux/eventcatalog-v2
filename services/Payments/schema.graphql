@@ -1,0 +1,206 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum DistinctFieldsForPayments {
+  amountExcludingVat
+  currency
+  paymentGateway
+  paymentStatus
+  transactionDate
+  vatAmount
+}
+
+input FilterDateInput {
+  _eq: DateTime
+  _gt: DateTime
+  _gte: DateTime
+  _in: [DateTime!]
+  _is_null: Boolean
+  _lt: DateTime
+  _lte: DateTime
+  _neq: DateTime
+  _nin: [DateTime!]
+}
+
+input FilterEnumInput {
+  _eq: String
+  _in: [String!]
+  _is_null: Boolean
+  _neq: String
+  _nin: [String!]
+}
+
+input FilterNumberInput {
+  _eq: Float
+  _gt: Float
+  _gte: Float
+  _in: [Float!]
+  _is_null: Boolean
+  _lt: Float
+  _lte: Float
+  _neq: Float
+  _nin: [Float!]
+}
+
+input FilterStringInput {
+  _contains: String
+  _ends_with: String
+  _eq: String
+  _in: [String!]
+  _is_null: Boolean
+  _neq: String
+  _nin: [String!]
+  _starts_with: String
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""
+Possible direction in which to order a list of items when provided an `orderBy` argument.
+"""
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+type PaginatedPayments {
+  """The limit of pagination"""
+  limit: Int
+
+  """The offset of pagination"""
+  offset: Int
+
+  """All payments"""
+  payments: [Payments!]
+
+  """The total count of payments"""
+  total: Int
+}
+
+"""PaymentOrderInput"""
+enum PaymentOrderInput {
+  amountExcludingVat
+  createdAt
+  paymentMethod
+  paymentStatus
+  transactionDate
+  updatedAt
+  vatAmount
+}
+
+"""Status of the payment"""
+enum PaymentStatus {
+  canceled
+  draft
+  onhold
+  open
+  paid
+  pending
+  processing
+  receive
+  refunded
+  requires_action
+  requires_capture
+  requires_confirmation
+  requires_payment_method
+  succeeded
+  uncollectible
+  void
+}
+
+type Payments {
+  """Amount of the plan excluding VAT."""
+  amountExcludingVat: Float!
+
+  """Timestamp when the record was created."""
+  createdAt: DateTime!
+
+  """Currency in which the amount is specified (e.g., USD)."""
+  currency: String!
+  id: ID!
+
+  """Any additional data related to the transaction."""
+  metadata: JSONObject
+
+  """Payment gateway used (e.g., Stripe)."""
+  paymentGateway: String!
+
+  """Unique ID of the transaction in the payment gateway."""
+  paymentGatewayId: String
+
+  """
+  Payment method used (e.g., credit card, debit card, bank transfer, etc.).
+  """
+  paymentMethod: String!
+
+  """Status of the payment."""
+  paymentStatus: PaymentStatus!
+
+  """Invoice ID provided by Stripe."""
+  stripeInvoiceId: String
+
+  """The intent ID provided by Stripe for the payment page."""
+  stripePaymentIntentId: String
+
+  """Stripe Subscription id"""
+  stripeSubscriptionId: String
+
+  """User Subscription id"""
+  subscriptionId: String
+
+  """The Tenant Id."""
+  tenantId: String
+
+  """Timestamp when the transaction was initiated or completed."""
+  transactionDate: DateTime!
+
+  """Timestamp when the record was last updated."""
+  updatedAt: DateTime!
+
+  """VAT amount."""
+  vatAmount: Float!
+}
+
+input PaymentsFilterInput {
+  _and: [PaymentsFilterInput!]
+  _not: [PaymentsFilterInput!]
+  _or: [PaymentsFilterInput!]
+  amountExcludingVat: FilterNumberInput
+  createdAt: FilterDateInput
+  currency: FilterStringInput
+  id: FilterStringInput
+  metadata: JSONObject
+  paymentGateway: FilterStringInput
+  paymentGatewayId: FilterStringInput
+  paymentMethod: FilterStringInput
+  paymentStatus: FilterEnumInput
+  stripeInvoiceId: FilterStringInput
+  stripePaymentIntentId: FilterStringInput
+  stripeSubscriptionId: FilterStringInput
+  subscriptionId: FilterStringInput
+  tenantId: FilterStringInput
+  transactionDate: FilterDateInput
+  updatedAt: FilterDateInput
+  vatAmount: FilterNumberInput
+}
+
+input PaymentsOrderInput {
+  direction: OrderDirection!
+  field: PaymentOrderInput!
+}
+
+type Query {
+  getInvoiceLinkById(stripeInvoiceId: String!): String
+  getPaymentById(id: ID!): Payments
+  getPayments(distinct: DistinctFieldsForPayments, limit: Int = 10, offset: Int = 0, order_by: [PaymentsOrderInput!], where: PaymentsFilterInput): PaginatedPayments
+  getPaymentsBySubscriptionId(distinct: DistinctFieldsForPayments, limit: Int = 10, offset: Int = 0, order_by: [PaymentsOrderInput!], subscriptionId: ID!, where: PaymentsFilterInput): PaginatedPayments
+}

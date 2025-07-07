@@ -1,0 +1,193 @@
+asyncapi: 2.5.0
+info:
+  title: Payments Async API
+  description: The Payments Async API description
+  version: '1.0'
+  contact: {}
+tags: []
+servers:
+  payment-server:
+    url: amqp://undefined:undefined
+    protocol: amqp
+    protocolVersion: '1.0'
+    description: Allows you to connect using the AMQP protocol to Messaging Broker.
+    security:
+      - user-password: []
+    variables:
+      port:
+        description: >-
+          Secure connection (TLS) is available through port 5671. Non secure
+          connection available through port 5672.
+        default: '5672'
+    bindings: {}
+components:
+  securitySchemes:
+    user-password:
+      type: userPassword
+  schemas:
+    PaymentEventHeadersDto:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          description: Unique identifier for tracking the request
+          example: 123e4567-e89b-12d3-a456-426614174000
+        sourceType:
+          type: string
+          description: Type of the source of the message
+          default: APPLICATION
+        sourceIdType:
+          type: string
+          description: Type of identifier
+          default: Application-ID
+        sourceId:
+          type: string
+          description: Application identifier
+          example: app-12345
+        uid:
+          type: string
+          description: Unique message ID
+          example: msg-987654321
+        dataConfidentiality:
+          type: string
+          description: Data confidentiality classification
+          enum:
+            - A
+            - B
+            - C
+            - INTERNAL
+            - PUBLIC
+            - P
+            - P+
+          default: C
+        persistence:
+          type: boolean
+          description: Message persistence flag
+          default: true
+        replyChannel:
+          type: string
+          description: Reply channel URI
+          example: /engineering/projects/v1/response/part-creation-request
+        createdAt:
+          type: string
+          description: Creation timestamp
+          example: '2025-03-14T10:00:00Z'
+        charEncoding:
+          type: string
+          description: Character encoding
+          default: utf-8
+        languageCode:
+          type: string
+          description: Language code
+          default: en
+        host:
+          type: string
+          description: Source hostname
+          example: api.example.com
+      required:
+        - correlationId
+        - sourceId
+        - uid
+        - createdAt
+    PaymentCreatedEventDto:
+      type: object
+      properties:
+        subscriptionId:
+          type: string
+          description: User Subscription id
+        stripeSubscriptionId:
+          type: string
+          description: Stripe Subscription id
+          nullable: true
+        stripePaymentIntentId:
+          type: string
+          description: The intent ID provided by Stripe for the payment page.
+          nullable: true
+        stripeInvoiceId:
+          type: string
+          description: Invoice ID provided by Stripe.
+          nullable: true
+        tenantId:
+          type: string
+          description: Tenant Id.
+        currency:
+          type: string
+          description: Currency in which the amount is specified (e.g., USD).
+        paymentMethod:
+          type: string
+          description: >-
+            Payment method used (e.g., credit card, debit card, bank transfer,
+            etc.).
+          nullable: true
+        paymentStatus:
+          type: string
+          description: Status of the payment.
+          enum:
+            - pending
+            - receive
+            - onhold
+            - requires_payment_method
+            - requires_confirmation
+            - requires_action
+            - processing
+            - requires_capture
+            - canceled
+            - succeeded
+            - refunded
+            - draft
+            - open
+            - paid
+            - uncollectible
+            - void
+        paymentGateway:
+          type: string
+          description: Payment gateway used (e.g., Stripe).
+          enum:
+            - STRIPE
+        paymentGatewayId:
+          type: string
+          description: Unique ID of the transaction in the payment gateway.
+          nullable: true
+        transactionDate:
+          format: date-time
+          type: string
+          description: Timestamp when the transaction was initiated or completed.
+          nullable: true
+        metadata:
+          type: object
+          description: Any additional data related to the transaction.
+          nullable: true
+        paymentId:
+          type: string
+          description: uuid of payment record
+          example: 123e4567-e89b-12d3-a456-426614174000
+        amountExcludingVat:
+          type: number
+        vatAmount:
+          type: number
+        _headers:
+          $ref: '#/components/schemas/PaymentEventHeadersDto'
+      required:
+        - subscriptionId
+        - tenantId
+        - currency
+        - paymentStatus
+        - paymentGateway
+        - paymentId
+        - amountExcludingVat
+        - vatAmount
+        - _headers
+defaultContentType: application/json
+channels:
+  payments-microservice/v1/event/payments/payment-created:
+    publish:
+      summary: Payment Created
+      description: >-
+        This method is used to publish a event when new payment record is
+        created
+      operationId: payment-created.publish
+      message:
+        name: payment-created
+        payload:
+          $ref: '#/components/schemas/PaymentCreatedEventDto'
+        x-identifier: payments-microservice/v1/event/payments/payment-created

@@ -1,0 +1,29 @@
+openapi: 3.1.0
+paths:
+  /health:
+    get:
+      operationId: AppController_getHealth
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - App
+  /v1/subscriptions/webhook:
+    post:
+      operationId: AppController_handleStripeWebhook
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - App
+info:
+  title: Subscriptions MS RestAPI
+  description: MS used to manage subscriptions
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas: {}

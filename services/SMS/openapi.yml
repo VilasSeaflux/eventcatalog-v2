@@ -1,0 +1,302 @@
+openapi: 3.0.0
+paths:
+  /health:
+    get:
+      operationId: MessageController_healthCheck
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - MESSAGE API
+        - Health Endpoint
+  /messages:
+    post:
+      operationId: MessageController_sendMessage
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageInput'
+      responses:
+        '201':
+          description: Message request is created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponseDto'
+        '400':
+          description: Message request contains invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageErrorResponseDto'
+      tags:
+        - MESSAGE API
+    get:
+      operationId: MessageController_index
+      parameters:
+        - name: distinct
+          required: false
+          in: query
+          description: The field name to be distinct
+          schema:
+            $ref: '#/components/schemas/distinct'
+        - name: orderBy
+          required: false
+          in: query
+          style: form
+          explode: true
+          example: createdAt:desc
+          schema:
+            type: string
+        - name: senderNumber
+          required: false
+          in: query
+          description: Filter Message by sender Number
+          example: '33774100383'
+          schema:
+            type: string
+        - name: receiverNumber
+          required: false
+          in: query
+          description: Filter Message by receiver Number
+          example: '33774100383'
+          schema:
+            type: string
+        - name: messageId
+          required: false
+          in: query
+          description: Filter Message by message ID
+          example: 550e8400-e29b-41d4-a716-446655440000
+          schema:
+            type: string
+        - name: userId
+          required: false
+          in: query
+          description: Filter Message by user ID
+          example: 550e8400-e29b-41d4-a716-446655440000
+          schema:
+            type: string
+        - name: createdAt
+          required: false
+          in: query
+          description: Filter Message by creation date (ISO 8601 format)
+          example: '2025-01-01T00:00:00.000Z'
+          schema:
+            type: string
+        - name: updatedAt
+          required: false
+          in: query
+          description: Filter Message by last updated date (ISO 8601 format)
+          example: '2025-01-01T00:00:00.000Z'
+          schema:
+            type: string
+        - name: limit
+          required: false
+          in: query
+          description: The limit of pagination
+          example: 10
+          schema:
+            type: number
+        - name: offset
+          required: false
+          in: query
+          description: The offset of pagination
+          example: 0
+          schema:
+            type: number
+      responses:
+        '200':
+          description: A list of messages with pagination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageListResponseDto'
+      tags:
+        - MESSAGE API
+  /messages/{id}:
+    get:
+      operationId: MessageController_show
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: >-
+            either an integer for the project id or a string for the project
+            name
+          schema:
+            oneOf:
+              - type: string
+              - type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponseDto'
+        '404':
+          description: Message request contains invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageErrorResponseDto'
+      tags:
+        - MESSAGE API
+    delete:
+      operationId: MessageController_delete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: >-
+            either an integer for the project id or a string for the project
+            name
+          schema:
+            oneOf:
+              - type: string
+              - type: integer
+      responses:
+        '200':
+          description: Message successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponseDto'
+        '404':
+          description: Message with provided ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageErrorResponseDto'
+      tags:
+        - MESSAGE API
+info:
+  title: Messages API
+  description: The Messages API description
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    MessageInput:
+      type: object
+      properties:
+        senderNumber:
+          type: string
+          description: The phone number of sender
+          default: '+3312345678'
+        senderPlatform:
+          type: string
+          description: The platform name which sends the message from
+          default: ''
+        receiverNumber:
+          type: string
+          description: The phone number of receiver
+          default: '+33756810722'
+        body:
+          type: string
+          description: The body of message
+          default: Demo message
+        userId:
+          type: string
+          description: User ID
+          example: 550e8400-e29b-41d4-a716-446655440000
+      required:
+        - senderNumber
+        - senderPlatform
+        - receiverNumber
+        - body
+        - userId
+    MessageResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: b4361563-6846-4e52-a406-b3f58c382ef3
+        createdAt:
+          type: string
+          example: '2025-03-23T01:01:47.300Z'
+        updatedAt:
+          type: string
+          example: '2025-03-23T01:01:47.300Z'
+        senderNumber:
+          type: string
+          example: '+3312345678'
+        receiverNumber:
+          type: string
+          example: '+923052513506'
+        senderPlatform:
+          type: string
+          example: ''
+        body:
+          type: string
+          example: Demo message
+        messageId:
+          type: string
+          example: 3b808e58-95a7-5d7a-8fb3-ee01ca1d170d
+        userId:
+          type: string
+          example: f8a833b4-d686-5eb1-a471-53ed9aaf838d
+      required:
+        - id
+        - createdAt
+        - updatedAt
+        - senderNumber
+        - receiverNumber
+        - senderPlatform
+        - body
+        - messageId
+        - userId
+    ErrorDto:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 'Error code eg: INVALID_REQUEST'
+        message:
+          type: string
+          example: 'Error Message eg: The requested resource does not exist.'
+      required:
+        - code
+        - message
+    MessageErrorResponseDto:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDto'
+      required:
+        - error
+    distinct:
+      type: string
+      enum:
+        - senderNumber
+        - senderPlatform
+        - receiverNumber
+        - body
+        - messageId
+        - userId
+    MessageListResponseDto:
+      type: object
+      properties:
+        meta:
+          type: object
+          example:
+            total: 2
+            limit: 4
+            offset: 0
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageResponseDto'
+      required:
+        - meta
+        - data

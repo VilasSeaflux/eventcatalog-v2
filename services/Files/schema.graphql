@@ -1,0 +1,173 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum DistinctFieldForFiles {
+  awsETag
+  bucketName
+  downloadUrl
+  filename
+  metadata
+  ownerId
+  private
+  status
+  uploadUrl
+}
+
+type File {
+  """The aws bucket name of file"""
+  bucketName: String
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """The url of file"""
+  fileUrl: String
+
+  """The folder name"""
+  folderName: String
+  id: ID!
+
+  """The file name"""
+  name: String
+
+  """The owner id of file"""
+  ownerId: String
+
+  """The preSignedUrl of file"""
+  preSignedUrl: String
+
+  """The status of file (uploading, uploaded)"""
+  status: String
+
+  """Identifies the date and time when the object was last updated"""
+  updatedAt: DateTime!
+}
+
+input FileCreateInput {
+  bucketName: String
+  folderName: String
+  name: String!
+  ownerId: String
+  status: String
+}
+
+input FileDeleteInput {
+  serviceName: String
+  userId: String
+}
+
+input FileFilter {
+  _and: [FileFilter!]
+  _not: [FileFilter!]
+  _or: [FileFilter!]
+  awsETag: FilterString
+  bucketName: FilterString
+  downloadUrl: FilterString
+  filename: FilterString
+  metadata: FilterString
+  ownerId: FilterString
+  private: FilterBoolean
+  status: FilterString
+  uploadUrl: FilterString
+}
+
+input FileOrder {
+  awsETag: OrderDirectionV2
+  bucketName: OrderDirectionV2
+  createdAt: OrderDirectionAscDesc
+  downloadUrl: OrderDirectionV2
+  filename: OrderDirectionV2
+  id: OrderDirectionV2
+  metadata: OrderDirectionV2
+  ownerId: OrderDirectionV2
+  private: OrderDirectionV2
+  status: OrderDirectionV2
+  updatedAt: OrderDirectionAscDesc
+  uploadUrl: OrderDirectionV2
+}
+
+input FileUpdateInput {
+  """The aws bucket name of file"""
+  bucketName: String
+  folderName: String
+  name: String
+  status: String
+}
+
+type FilesWithInfo {
+  """All files"""
+  files: [File!]
+
+  """The limit of pagination"""
+  limit: Int
+
+  """The offset of pagination"""
+  offset: Int
+
+  """The total count of files"""
+  total: Int
+}
+
+input FilterBoolean {
+  _eq: Boolean
+  _is_null: Boolean
+  _neq: Boolean
+}
+
+input FilterString {
+  _contains: String
+  _ends_with: String
+  _eq: String
+  _in: [String!]
+  _is_null: Boolean
+  _neq: String
+  _nin: [String!]
+  _starts_with: String
+}
+
+type Mutation {
+  createPrivateFile(data: FileCreateInput!): File!
+  createPublicFile(data: FileCreateInput!): File!
+  deleteMyPrivateFiles(data: FileDeleteInput!): [File!]!
+  deleteMyPublicFiles(data: FileDeleteInput!): [File!]!
+  deletePrivateFileById(id: String!): File!
+  deletePublicFileById(id: String!): File!
+  updatePrivateFileById(data: FileUpdateInput!, id: String!): File!
+  updatePublicFileById(data: FileUpdateInput!, id: String!): File!
+}
+
+"""
+Possible direction in which to order a list of items when provided an `orderBy` argument.
+"""
+enum NullsType {
+  first
+  last
+}
+
+"""
+Possible direction in which to order a list of items when provided an `orderBy` argument.
+"""
+enum OrderDirectionAscDesc {
+  ASC
+  DESC
+}
+
+input OrderDirectionV2 {
+  nulls: NullsType
+  sort: OrderDirectionAscDesc
+}
+
+type Query {
+  files: String!
+  filesRoot: String!
+  getAllPrivateFiles(distinct: DistinctFieldForFiles, limit: Int = 10, offset: Int = 0, order_by: [FileOrder!], where: FileFilter): FilesWithInfo!
+  getAllPublicFiles(distinct: DistinctFieldForFiles, limit: Int = 10, offset: Int = 0, order_by: [FileOrder!], where: FileFilter): FilesWithInfo!
+  getPrivateFileById(id: String!): File!
+  getPublicFileById(id: String!): File!
+}

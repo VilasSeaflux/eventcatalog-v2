@@ -1,0 +1,46 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Payments {
+  id String [pk]
+  vatAmount Decimal [not null]
+  amountExcludingVat Decimal [not null]
+  currency String [not null]
+  paymentMethod String
+  paymentStatus PaymentStatus [not null]
+  paymentGateway PaymentGateway [not null, default: 'STRIPE']
+  paymentGatewayId String
+  subscriptionId String
+  stripeSubscriptionId String
+  stripePaymentIntentId String [unique]
+  stripeInvoiceId String [unique]
+  tenantId String
+  metadata Json
+  transactionDate DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Enum PaymentGateway {
+  STRIPE
+}
+
+Enum PaymentStatus {
+  pending
+  receive
+  onhold
+  requires_payment_method
+  requires_confirmation
+  requires_action
+  processing
+  requires_capture
+  canceled
+  succeeded
+  refunded
+  draft
+  open
+  paid
+  uncollectible
+  void
+}

@@ -1,0 +1,859 @@
+asyncapi: 2.5.0
+info:
+  title: Models Microservice Async API
+  description: Microservice for managing models
+  version: '1.0'
+  contact: {}
+tags: []
+servers:
+  Server:
+    url: >-
+      amqp://utopikai-rag-solace-dev-c18f75dc81ef2e53.elb.eu-west-1.amazonaws.com:5672/
+    protocol: amqp
+    protocolVersion: '1'
+    description: Allows you to connect using the AMQP protocol to Messaging Broker.
+    security:
+      - user-password: []
+    variables:
+      port:
+        description: >-
+          Secure connection (TLS) is available through port 5671. Non secure
+          connection available through port 5672.
+        default: '5672'
+    bindings: {}
+components:
+  securitySchemes:
+    user-password:
+      type: userPassword
+  schemas:
+    LLMCreatedRequest:
+      type: object
+      properties:
+        llmId:
+          type: string
+          example: f34d6241-b508-416f-9d25-c5f6861292ba
+          description: Unique identifier for the LLM
+          format: uuid
+        llmProviderId:
+          type: string
+          example: 58aca895-8a1a-4c59-82f9-a12b6a1c6d19
+          description: Unique identifier for the LLM provider
+          format: uuid
+        name:
+          type: string
+          example: HyperMind-X
+          description: Name of the LLM
+        displayName:
+          type: string
+          example: OpenAI
+          description: Name of the LLM provider to show
+        logo:
+          type: string
+          example: https://example.com/llm-logo1.png
+          description: URL to the logo of the LLM
+        description:
+          type: string
+          example: >-
+            A next-gen reasoning and multitask model designed for complex
+            problem solving and image generation
+          description: Description of the LLM
+        status:
+          type: string
+          example: ACTIVE
+          description: Status of the LLM
+          enum:
+            - ACTIVE
+            - DRAFT
+            - DEPRECATED
+        backupLlm:
+          type: string
+          example: a6a4c914-5c9d-441b-bf9e-4a8f8d8f7c9c
+          description: UUID of the backup LLM
+          format: uuid
+        inputBaseCost:
+          type: number
+          example: 0.075
+          description: Input base cost of the LLM
+        outputBaseCost:
+          type: number
+          example: 0.15
+          description: Output base cost of the LLM
+        inputMargin:
+          type: number
+          example: 0.3
+          description: Input margin for the LLM
+        outputMargin:
+          type: number
+          example: 0.6
+          description: Output margin for the LLM
+        inputPrice:
+          type: number
+          example: 0.975
+          description: Input price of the LLM
+        outputPrice:
+          type: number
+          example: 1.95
+          description: Output price of the LLM
+        currency:
+          type: string
+          example: USD
+          description: Currency for the LLM price
+        isFree:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is free
+        isOpenSource:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is open source
+        isUtopikaiManaged:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is managed by Utopikai
+        isMultimodal:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is multimodal
+        isReasoningModel:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is a reasoning model
+        isVoiceModeSupported:
+          type: boolean
+          example: true
+          description: Indicates if the LLM supports voice mode
+        canGenerateImages:
+          type: boolean
+          example: true
+          description: Indicates if the LLM can generate images
+        isBYK:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is BYK
+        isDefault:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is the default
+        isToolUseSupported:
+          type: boolean
+          example: false
+          description: Indicates if the LLM supports tool use
+        config:
+          type: string
+          example: '{"temperature": 0.7, "max_tokens": 1024, "top_p": 0.9}'
+          description: Configuration settings in JSON format
+          format: json
+        createdBy:
+          type: string
+          example: fada395-8a1a-4c59-82f9-a23231c6d10
+          description: UUID of the creator
+          format: uuid
+        isArchived:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is archived
+        createdAt:
+          type: string
+          example: '2025-04-08T10:00:00Z'
+          description: Creation date of the LLM
+          format: date-time
+        updatedAt:
+          type: string
+          example: ''
+          description: Last update date of the LLM
+          format: date-time
+      required:
+        - llmId
+        - llmProviderId
+        - name
+        - displayName
+        - description
+        - status
+        - inputBaseCost
+        - outputBaseCost
+        - inputMargin
+        - outputMargin
+        - inputPrice
+        - outputPrice
+        - currency
+        - isFree
+        - isOpenSource
+        - isUtopikaiManaged
+        - isMultimodal
+        - isReasoningModel
+        - isVoiceModeSupported
+        - canGenerateImages
+        - isBYK
+        - isDefault
+        - isToolUseSupported
+        - config
+        - createdAt
+    LLMPricingHistoryCreatedRequest:
+      type: object
+      properties:
+        llmPricingHistoryId:
+          type: string
+          example: 9c12f7d4-4e7a-44a8-b92b-38efbdb94f09
+          description: Unique identifier for the LLM Pricing History
+          format: uuid
+        llmId:
+          type: string
+          example: 3f9a1d20-35ea-4a7f-9e1d-4be7b739c8e5
+          description: Unique identifier for the LLM
+          format: uuid
+        inputBaseCost:
+          type: number
+          example: 0.0025
+          description: Input base cost of the LLM
+        outputBaseCost:
+          type: number
+          example: 0.004
+          description: Output base cost of the LLM
+        inputMargin:
+          type: number
+          example: 0.3
+          description: Input margin for the LLM
+        outputMargin:
+          type: number
+          example: 0.45
+          description: Output margin for the LLM
+        inputPrice:
+          type: number
+          example: 0.325
+          description: Input price of the LLM
+        outputPrice:
+          type: number
+          example: 0.55
+          description: Output price of the LLM
+        currency:
+          type: string
+          example: USD
+          description: Currency for the LLM price
+        validFrom:
+          type: string
+          example: '2025-01-01T00:00:00Z'
+          description: Date from which the pricing is valid
+          format: date-time
+        validTo:
+          type: string
+          example: ''
+          description: Date until which the pricing is valid
+          format: date-time
+        isArchived:
+          type: boolean
+          example: false
+          description: Indicates if the pricing history is archived
+        createdAt:
+          type: string
+          example: '2024-12-10T08:45:00Z'
+          description: Creation date of the pricing history
+          format: date-time
+        updatedAt:
+          type: string
+          example: ''
+          description: Last update date of the pricing history
+          format: date-time
+      required:
+        - llmPricingHistoryId
+        - llmId
+        - inputBaseCost
+        - outputBaseCost
+        - inputMargin
+        - outputMargin
+        - inputPrice
+        - outputPrice
+        - currency
+        - validFrom
+        - createdAt
+    LLMUpdatedRequest:
+      type: object
+      properties:
+        llmId:
+          type: string
+          example: f34d6241-b508-416f-9d25-c5f6861292ba
+          description: Unique identifier for the LLM
+          format: uuid
+        llmProviderId:
+          type: string
+          example: 58aca895-8a1a-4c59-82f9-a12b6a1c6d19
+          description: Unique identifier for the LLM provider
+          format: uuid
+        name:
+          type: string
+          example: HyperMind-X
+          description: Name of the LLM
+        displayName:
+          type: string
+          example: OpenAI
+          description: Name of the LLM provider to show
+        logo:
+          type: string
+          example: https://example.com/llm-logo1.png
+          description: URL to the logo of the LLM
+        description:
+          type: string
+          example: >-
+            A next-gen reasoning and multitask model designed for complex
+            problem solving and image generation
+          description: Description of the LLM
+        status:
+          type: string
+          example: ACTIVE
+          description: Status of the LLM
+          enum:
+            - ACTIVE
+            - DRAFT
+            - DEPRECATED
+        backupLlm:
+          type: string
+          example: a6a4c914-5c9d-441b-bf9e-4a8f8d8f7c9c
+          description: UUID of the backup LLM
+          format: uuid
+        inputBaseCost:
+          type: number
+          example: 0.075
+          description: Input base cost of the LLM
+        outputBaseCost:
+          type: number
+          example: 0.15
+          description: Output base cost of the LLM
+        inputMargin:
+          type: number
+          example: 0.3
+          description: Input margin for the LLM
+        outputMargin:
+          type: number
+          example: 0.6
+          description: Output margin for the LLM
+        inputPrice:
+          type: number
+          example: 0.975
+          description: Input price of the LLM
+        outputPrice:
+          type: number
+          example: 1.95
+          description: Output price of the LLM
+        currency:
+          type: string
+          example: USD
+          description: Currency for the LLM price
+        isFree:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is free
+        isOpenSource:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is open source
+        isUtopikaiManaged:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is managed by Utopikai
+        isMultimodal:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is multimodal
+        isReasoningModel:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is a reasoning model
+        isVoiceModeSupported:
+          type: boolean
+          example: true
+          description: Indicates if the LLM supports voice mode
+        canGenerateImages:
+          type: boolean
+          example: true
+          description: Indicates if the LLM can generate images
+        isBYK:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is BYK
+        isDefault:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is the default
+        isToolUseSupported:
+          type: boolean
+          example: false
+          description: Indicates if the LLM supports tool use
+        config:
+          type: string
+          example: '{"temperature": 0.7, "max_tokens": 1024, "top_p": 0.9}'
+          description: Configuration settings in JSON format
+          format: json
+        createdBy:
+          type: string
+          example: fada395-8a1a-4c59-82f9-a23231c6d10
+          description: UUID of the creator
+          format: uuid
+        isArchived:
+          type: boolean
+          example: false
+          description: Indicates if the LLM is archived
+        createdAt:
+          type: string
+          example: '2025-04-08T10:00:00Z'
+          description: Creation date of the LLM
+          format: date-time
+        updatedAt:
+          type: string
+          example: '2025-04-08T11:54:22Z'
+          description: Last update date of the LLM
+          format: date-time
+      required:
+        - llmId
+        - llmProviderId
+        - name
+        - displayName
+        - description
+        - status
+        - inputBaseCost
+        - outputBaseCost
+        - inputMargin
+        - outputMargin
+        - inputPrice
+        - outputPrice
+        - currency
+        - isFree
+        - isOpenSource
+        - isUtopikaiManaged
+        - isMultimodal
+        - isReasoningModel
+        - isVoiceModeSupported
+        - canGenerateImages
+        - isBYK
+        - config
+        - createdAt
+    LLMArchivedRequest:
+      type: object
+      properties:
+        llmId:
+          type: string
+          example: f34d6241-b508-416f-9d25-c5f6861292ba
+          description: Unique identifier for the LLM
+          format: uuid
+        archivedAt:
+          type: string
+          example: '2025-04-08T11:54:22Z'
+          description: Archived date of the LLM
+          format: date-time
+      required:
+        - llmId
+        - archivedAt
+    LLMProviderCreatedRequest:
+      type: object
+      properties:
+        llmProviderId:
+          type: string
+          example: 3f9a1d20-35ea-4a7f-9e1d-4be7b739c8e5
+          description: Unique identifier for the LLM provider
+        name:
+          type: string
+          example: openai
+          description: Name of the LLM provider
+        displayName:
+          type: string
+          example: OpenAI
+          description: Name of the LLM provider to show
+        logo:
+          type: string
+          example: https://example.com/logos/openai.png
+          description: URL to the logo of the LLM provider
+        apibase:
+          type: string
+          example: https://api.openai.com/v1
+          description: Base URL for the API
+        apiKey:
+          type: string
+          example: sk-4a1f9f52c6a2493b9c312ef20f9a12a1
+          description: API key for accessing the LLM provider
+        apiVersion:
+          type: string
+          example: v1
+          description: API version
+        config:
+          type: string
+          example: ''
+          description: Configuration settings in JSON format
+        defaultModel:
+          type: string
+          example: a12c34d5-67f8-90ab-cdef-1234567890ab
+          description: UUID of the default model
+        fastDefaultModel:
+          type: string
+          example: b23d45e6-78g9-01bc-def1-2345678901bc
+          description: UUID of the fast default model
+        deploymentName:
+          type: string
+          example: openai-main-deploy
+          description: Name of the deployment
+        isArchived:
+          type: boolean
+          example: false
+          description: Indicates if the provider is archived
+        createdAt:
+          type: string
+          example: '2024-07-15T14:22:00Z'
+          description: Creation date of the LLM provider
+        updatedAt:
+          type: string
+          example: ''
+          description: Last update date of the LLM provider
+      required:
+        - llmProviderId
+        - name
+        - displayName
+        - createdAt
+    LLMProviderUpdatedRequest:
+      type: object
+      properties:
+        llmProviderId:
+          type: string
+          example: 3f9a1d20-35ea-4a7f-9e1d-4be7b739c8e5
+          description: Unique identifier for the LLM provider
+          format: uuid
+        name:
+          type: string
+          example: OpenAI
+          description: Name of the LLM provider
+        displayName:
+          type: string
+          example: OpenAI
+          description: Name of the LLM provider to show
+        logo:
+          type: string
+          example: https://example.com/logos/openai.png
+          description: URL to the logo of the LLM provider
+        apibase:
+          type: string
+          example: https://api.openai.com/v1
+          description: Base URL for the API
+        apiKey:
+          type: string
+          example: sk-4a1f9f52c6a2493b9c312ef20f9a12a1
+          description: API key for accessing the LLM provider
+        apiVersion:
+          type: string
+          example: v1
+          description: API version
+        config:
+          type: string
+          example: '{"temperature": 0.7, "max_tokens": 1024, "top_p": 0.9}'
+          description: Configuration settings in JSON format
+        defaultModel:
+          type: string
+          example: a12c34d5-67f8-90ab-cdef-1234567890ab
+          description: UUID of the default model
+        fastDefaultModel:
+          type: string
+          example: b23d45e6-78g9-01bc-def1-2345678901bc
+          description: UUID of the fast default model
+        deploymentName:
+          type: string
+          example: openai-main-deploy
+          description: Name of the deployment
+        isArchived:
+          type: boolean
+          example: false
+          description: Indicates if the provider is archived
+        createdAt:
+          type: string
+          example: '2024-07-15T14:22:00Z'
+          description: Creation date of the LLM provider
+          format: date-time
+        updatedAt:
+          type: string
+          example: '2025-04-21T09:05:33Z'
+          description: Last update date of the LLM provider
+          format: date-time
+      required:
+        - llmProviderId
+        - name
+        - displayName
+        - createdAt
+        - updatedAt
+    LLMProviderArchivedRequest:
+      type: object
+      properties:
+        llmProviderId:
+          type: string
+          example: f34d6241-b508-416f-9d25-c5f6861292ba
+          description: Unique identifier for the LLM provider
+          format: uuid
+        archivedAt:
+          type: string
+          example: '2025-04-08T11:54:22Z'
+          description: Archived date of the LLM provider
+          format: date-time
+      required:
+        - llmProviderId
+        - archivedAt
+    TenantLLMCreatedRequest:
+      type: object
+      properties:
+        tenantLlmId:
+          type: string
+          example: 4d8e71f2-9a3a-4b70-9c58-a8d62a0d0d23
+          description: Unique identifier for the Tenant LLM
+          format: uuid
+        tenantId:
+          type: string
+          example: 7f2a83b6-5e2f-4f88-9c64-97e3dbce1f41
+          description: Unique identifier for the Tenant
+          format: uuid
+        llmId:
+          type: string
+          example: 2e89adf6-6c4e-4b9a-b16e-3c9d33ea765e
+          description: Unique identifier for the LLM
+          format: uuid
+        llmEnabled:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is enabled for the Tenant
+        isArchived:
+          type: boolean
+          example: false
+          description: Indicates if the Tenant LLM is archived
+        createdAt:
+          type: string
+          example: '2025-02-10T11:30:00Z'
+          description: Creation date of the Tenant LLM
+          format: date-time
+        updatedAt:
+          type: string
+          example: ''
+          description: Last update date of the Tenant LLM
+          format: date-time
+      required:
+        - tenantLlmId
+        - tenantId
+        - llmId
+        - llmEnabled
+        - isArchived
+        - createdAt
+    TenantLLMUpdatedRequest:
+      type: object
+      properties:
+        tenantLlmId:
+          type: string
+          example: 4d8e71f2-9a3a-4b70-9c58-a8d62a0d0d23
+          description: Unique identifier for the Tenant LLM
+          format: uuid
+        tenantId:
+          type: string
+          example: 7f2a83b6-5e2f-4f88-9c64-97e3dbce1f41
+          description: Unique identifier for the Tenant
+          format: uuid
+        llmId:
+          type: string
+          example: 2e89adf6-6c4e-4b9a-b16e-3c9d33ea765e
+          description: Unique identifier for the LLM
+          format: uuid
+        llmEnabled:
+          type: boolean
+          example: true
+          description: Indicates if the LLM is enabled for the Tenant
+        isArchived:
+          type: boolean
+          example: false
+          description: Indicates if the Tenant LLM is archived
+        createdAt:
+          type: string
+          example: '2025-02-10T11:30:00Z'
+          description: Creation date of the Tenant LLM
+          format: date-time
+        updatedAt:
+          type: string
+          example: '2025-04-21T10:05:15Z'
+          description: Last update date of the Tenant LLM
+          format: date-time
+      required:
+        - tenantLlmId
+        - tenantId
+        - llmId
+        - llmEnabled
+        - isArchived
+        - createdAt
+        - updatedAt
+    TenantLLMArchivedRequest:
+      type: object
+      properties:
+        tenantLlmId:
+          type: string
+          example: 4d8e71f2-9a3a-4b70-9c58-a8d62a0d0d23
+          description: Unique identifier for the Tenant LLM
+          format: uuid
+        archivedAt:
+          type: string
+          example: '2025-04-21T10:05:15Z'
+          description: Archived date of the Tenant LLM
+          format: date-time
+      required:
+        - tenantLlmId
+        - archivedAt
+    AuthTenantEvent:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          description: The unique identifier of the tenant
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        schemaName:
+          type: string
+          description: The name of the schema
+          example: exampleSchemaName
+        name:
+          type: string
+          description: The name associated with the tenant event
+          example: Example Tenant Event
+        organisationId:
+          type: string
+          description: The unique identifier of the organisation
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        createdBy:
+          type: string
+          description: The unique identifier of the user who created the tenant event
+          example: 3eaecb34-8629-492a-b077-ee56649a5b91
+          format: uuid
+        bucketName:
+          type: string
+          description: The name of the bucket used by the tenant
+          example: example-bucket
+        region:
+          type: string
+          description: The region where the tenant is hosted
+          example: us-east-1
+        status:
+          type: string
+          description: The status of the tenant
+          example: ACTIVE
+          enum:
+            - INACTIVE
+            - TRIAL
+            - PENDING
+            - ACTIVE
+            - CLOSED
+            - EXPIRED
+            - SUSPENDED
+        isArchived:
+          type: boolean
+          description: Indicates if the tenant event is archived
+          example: false
+        createdAt:
+          type: string
+          description: The date when the tenant event was created
+          example: '2023-01-01T00:00:00Z'
+          format: date-time
+        updatedAt:
+          type: string
+          description: The date when the tenant event was last updated
+          example: '2023-01-02T00:00:00Z'
+          format: date-time
+      required:
+        - tenantId
+        - createdAt
+defaultContentType: application/json
+channels:
+  models.llm-created:
+    publish:
+      summary: LLM Created Event
+      description: Sends event when an LLM is created
+      message:
+        name: models-microservice/v1/event/llms/llm-created
+        payload:
+          $ref: '#/components/schemas/LLMCreatedRequest'
+        x-identifier: models.llm-created.event
+  models.llm-pricing-history-created:
+    publish:
+      summary: LLM pricing history Created Event
+      description: Sends event when an llm pricing history is created
+      message:
+        name: >-
+          models-microservice/v1/event/llm-pricing-history/llm-pricing-history-created
+        payload:
+          $ref: '#/components/schemas/LLMPricingHistoryCreatedRequest'
+        x-identifier: models.llm-pricing-history-created.event
+  models.llm-updated:
+    publish:
+      summary: LLM Updated Event
+      description: Sends event when an LLM is created
+      message:
+        name: models-microservice/v1/event/llms/llm-updated
+        payload:
+          $ref: '#/components/schemas/LLMUpdatedRequest'
+        x-identifier: models.llm-updated.event
+  models.llm-archived:
+    publish:
+      summary: LLM Archived Event
+      description: Sends event when an LLM is archived
+      message:
+        name: models-microservice/v1/event/llms/llm-archived
+        payload:
+          $ref: '#/components/schemas/LLMArchivedRequest'
+        x-identifier: models.llm-archived.event
+  models.llm-provider-created:
+    publish:
+      summary: LLM Provider Created Event
+      description: Sends event when an LLM Provider is created
+      message:
+        name: models-microservice/v1/event/llm-providers/llm-provider-created
+        payload:
+          $ref: '#/components/schemas/LLMProviderCreatedRequest'
+        x-identifier: models.llm-provider-created.event
+  models.llm-provider-updated:
+    publish:
+      summary: LLM Provider Updated Event
+      description: Sends event when an LLM Provider is updated
+      message:
+        name: models-microservice/v1/event/llm-providers/llm-provider-updated
+        payload:
+          $ref: '#/components/schemas/LLMProviderUpdatedRequest'
+        x-identifier: models.llm-provider-updated.event
+  models.llm-provider-archived:
+    publish:
+      summary: LLM Provider Archived Event
+      description: Sends event when an LLM Provider is archived
+      message:
+        name: models-microservice/v1/event/llm-providers/llm-provider-archived
+        payload:
+          $ref: '#/components/schemas/LLMProviderArchivedRequest'
+        x-identifier: models.llm-provider-archived.event
+  models.tenant-llm-created:
+    publish:
+      summary: Tenant LLM Created Event
+      description: Sends event when a Tenant LLM is created
+      message:
+        name: models-microservice/v1/event/tenant-llms/tenant-llm-created
+        payload:
+          $ref: '#/components/schemas/TenantLLMCreatedRequest'
+        x-identifier: models.tenant-llm-created.event
+  models.tenant-llm-updated:
+    publish:
+      summary: Tenant LLM Updated Event
+      description: Sends event when a Tenant LLM is updated
+      message:
+        name: models-microservice/v1/event/tenant-llms/tenant-llm-updated
+        payload:
+          $ref: '#/components/schemas/TenantLLMUpdatedRequest'
+        x-identifier: models.tenant-llm-updated.event
+  models.tenant-llm-archived:
+    publish:
+      summary: Tenant LLM Archived Event
+      description: Sends event when a Tenant LLM is archived
+      message:
+        name: models-microservice/v1/event/tenant-llms/tenant-llm-archived
+        payload:
+          $ref: '#/components/schemas/TenantLLMArchivedRequest'
+        x-identifier: models.tenant-llm-archived.event
+  auth.tenant-created:
+    subscribe:
+      summary: Tenant Created Event
+      description: Handles event when a tenant is created
+      message:
+        name: auth-microservice/v1/event/tenants/tenant-created
+        payload:
+          $ref: '#/components/schemas/AuthTenantEvent'
+        x-identifier: auth.tenant-created.event

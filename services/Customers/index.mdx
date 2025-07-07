@@ -1,0 +1,50 @@
+---
+# id of your service, used for slugs and references in EventCatalog.
+id: Customers
+
+# Display name of the Service, rendered in EventCatalog
+name: Customers
+
+# Version of the Service
+version: 1.0.2
+
+# Short summary of your Service
+summary: |
+  Service that contains order related information
+
+specifications:
+- type: openapi
+  path: openapi.yml
+  name: OpenAPI Specification
+- type: asyncapi
+  path: asyncapi.yml
+  name: AsyncAPI Specification
+
+receives:
+  - id: customers-queue
+    version: 1.0.0
+
+sends:
+  - id: customers-microservice-v1-event-tenants-user-joined
+    version: 1.0.0
+  - id: customers-microservice-v1-event-tenants-tenant-updated
+    version: 1.0.0
+  - id: customers-microservice-v1-event-tenants-tenant-created
+    version: 1.0.0
+  - id: customers-microservice-v1-event-organisations-organisation-updated
+    version: 1.0.0
+  - id: customers-microservice-v1-event-organisations-organisation-created
+    version: 1.0.0
+---
+
+## Overview
+
+This Customers service gives API consumers the ability to produce Customers in the systems. Events are raised from this system for downstream consumption.
+
+<NodeGraph />
+---
+<Schema file="schema.dbml" title="DBML" lang="prisma"/>
+---
+<Schema file="schema.graphql" title="graphql" lang="gql"/>
+---
+<Schema file="schema.dbml" title="dbml" lang="txt"/>

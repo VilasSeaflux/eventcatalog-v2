@@ -1,0 +1,225 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type OrganisationGraphQL {
+  id: ID!
+  name: String!
+  street1: String
+  street2: String
+  city: String!
+  country: String!
+  zipcode: String!
+  countryCode: String
+  phone: String
+  email: String
+  type: OrganisationType!
+  size: OrganisationSize!
+  status: OrganisationStatus!
+  sector: OrganisationSector
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""The type of the organisation"""
+enum OrganisationType {
+  PERSONAL
+  BUSINESS
+  ASSOCIATION
+}
+
+"""The size of the organisation"""
+enum OrganisationSize {
+  ONE
+  TWO_TO_FIVE
+  SIX_TO_TEN
+  TEN_TO_TWENTY
+  TWENTY_TO_FIFTY
+  FIFTY_TO_ONE_HUNDRED
+  ONE_HUNDRED_TO_FIVE_HUNDRED
+  FIVE_HUNDRED_TO_ONE_THOUSAND
+  MORE_THAN_ONE_THOUSAND
+}
+
+"""The status of the organisation"""
+enum OrganisationStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  CLOSED
+  PENDING
+}
+
+"""The sectors an organisation can belong to"""
+enum OrganisationSector {
+  TECHNOLOGY
+  HEALTHCARE
+  FINANCE
+  EDUCATION
+  MANUFACTURING
+  RETAIL
+  ENERGY
+  TRANSPORTATION_AND_LOGISTICS
+  REAL_ESTATE
+  HOSPITALITY_AND_TOURISM
+  MEDIA_AND_ENTERTAINMENT
+  GOVERNMENT_AND_PUBLIC_SECTOR
+  AGRICULTURE
+  CONSTRUCTION
+  LEGAL_SERVICES
+  PROFESSIONAL_SERVICES
+  BIOTECHNOLOGY
+  SPACE_EXPLORATION
+  ENVIRONMENTAL_SERVICES
+  NON_GOVERNMENTAL_ORGANIZATIONS
+  ART_AND_CULTURE
+  SPORTS_AND_RECREATION
+  PERSONAL_SERVICES
+  TELECOMMUNICATIONS_EQUIPMENT
+  OTHER
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type PaginatedOrganisations {
+  organisations: [OrganisationGraphQL!]!
+  total: Int!
+  limit: Int!
+  offset: Int!
+}
+
+type Query {
+  getOrganisationById(id: String!): OrganisationGraphQL!
+  getOrganisations(includeArchived: Boolean!, distinct: DistinctFieldsForOrganisations, limit: Int! = 10, offset: Int! = 0, order_by: [OrganisationOrderInput!], where: OrganisationFilterInput): PaginatedOrganisations!
+  getOrganisationsByUserId: [OrganisationGraphQL!]!
+}
+
+enum DistinctFieldsForOrganisations {
+  city
+  country
+  type
+  size
+  status
+  isArchived
+}
+
+input OrganisationOrderInput {
+  direction: OrderDirection!
+  field: String!
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+input OrganisationFilterInput {
+  _and: [OrganisationFilterInput!]
+  _not: [OrganisationFilterInput!]
+  _or: [OrganisationFilterInput!]
+  id: ID
+  name: FilterStringInput
+  street1: FilterStringInput
+  street2: FilterStringInput
+  city: FilterStringInput
+  country: FilterStringInput
+  zipcode: FilterStringInput
+  countryCode: FilterStringInput
+  phone: FilterStringInput
+  email: FilterStringInput
+  type: FilterOrganisationTypeInput
+  size: OrganisationSize
+  status: FilterOrganisationStatusInput
+  sector: FilterOrganisationSectorInput
+  createdAt: FilterDateInput
+  updatedAt: FilterDateInput
+}
+
+input FilterStringInput {
+  _contains: String
+  _ends_with: String
+  _eq: String
+  _in: [String!]
+  _is_null: Boolean
+  _neq: String
+  _nin: [String!]
+  _starts_with: String
+}
+
+input FilterOrganisationTypeInput {
+  _eq: OrganisationType
+  _in: [OrganisationType!]
+  _is_null: Boolean
+  _neq: OrganisationType
+  _nin: [OrganisationType!]
+}
+
+input FilterOrganisationStatusInput {
+  _eq: OrganisationStatus
+  _in: [OrganisationStatus!]
+  _is_null: Boolean
+  _neq: OrganisationStatus
+  _nin: [OrganisationStatus!]
+}
+
+input FilterOrganisationSectorInput {
+  _eq: OrganisationSector
+  _in: [OrganisationSector!]
+  _is_null: Boolean
+  _neq: OrganisationSector
+  _nin: [OrganisationSector!]
+}
+
+input FilterDateInput {
+  _eq: DateTime
+  _gt: DateTime
+  _gte: DateTime
+  _in: [DateTime!]
+  _is_null: Boolean
+  _lt: DateTime
+  _lte: DateTime
+  _neq: DateTime
+  _nin: [DateTime!]
+}
+
+type Mutation {
+  createOrganisation(data: OrganisationInput!): OrganisationGraphQL!
+  updateOrganisationById(data: OrganisationUpdateInput!): OrganisationGraphQL!
+  archiveOrganisation(id: String!): OrganisationGraphQL!
+}
+
+input OrganisationInput {
+  name: String!
+  street1: String
+  street2: String
+  city: String!
+  country: String!
+  zipcode: String!
+  countryCode: String
+  phone: String
+  email: String
+  type: OrganisationType!
+  size: OrganisationSize!
+  sector: OrganisationSector
+}
+
+input OrganisationUpdateInput {
+  id: String!
+  name: String
+  street1: String
+  street2: String
+  city: String
+  country: String
+  zipcode: String
+  countryCode: String
+  phone: String
+  email: String
+  type: OrganisationType
+  size: OrganisationSize
+  status: OrganisationStatus
+  sector: OrganisationSector
+}

@@ -1,0 +1,103 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  awsUserId String [unique]
+  profileImageId String
+  status Status [default: 'pending']
+  firstName String
+  lastName String
+  email String [unique, not null]
+  isEmailVerified Boolean
+  emailVerifiedAt DateTime
+  emailVerificationCode String [not null]
+  password String
+  role Role
+  gender gender
+  dateOfBirth String
+  country String
+  city String
+  postcode String
+  address String
+  phoneNumber String [unique]
+  countryCode String
+  isPhoneVerified Boolean
+  phoneVerifiedAt DateTime
+  emailPasswordAt DateTime
+  phoneVerificationCode String
+  userWeight Float
+  weightUnit weightUnit
+  spokenLanguages String[] [not null]
+  displayLanguage displayLanguage
+  aviationInterest aviationInterest
+  timeZone String
+  changePasswordToken String
+  flyNote String
+  addressLat Float
+  addressLong Float
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+  company Company
+}
+
+Table Company {
+  id String [pk]
+  status String [not null]
+  companyName String [not null]
+  country String
+  city String
+  postcode String
+  address String
+  owner User
+  ownerId String [unique]
+}
+
+Table MyBase {
+  id String [pk]
+  airportId String
+  pilotId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Enum displayLanguage {
+  en
+  fr
+  de
+}
+
+Enum gender {
+  mister
+  madam
+}
+
+Enum weightUnit {
+  kg
+  lbs
+}
+
+Enum aviationInterest {
+  not_at_all_interested
+  slightly_interested
+  very_interested
+  enthusiast
+}
+
+Enum Role {
+  pilot
+  student_pilot
+  passenger
+}
+
+Enum Status {
+  pending
+  validated
+  archived
+  banned
+  locked
+  suspended
+}
+
+Ref: Company.ownerId - User.id

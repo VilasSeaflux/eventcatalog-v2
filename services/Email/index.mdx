@@ -1,0 +1,44 @@
+---
+# id of your service, used for slugs and references in EventCatalog.
+id: Email
+
+# Display name of the Service, rendered in EventCatalog
+name: Email
+
+# Version of the Service
+version: 1.0.2
+
+# Short summary of your Service
+summary: |
+  Service that contains order related information
+
+specifications:
+- type: openapi
+  path: openapi.yml
+  name: OpenAPI Specification
+- type: asyncapi
+  path: asyncapi.yml
+  name: AsyncAPI Specification
+
+receives:
+  - id: email-queue
+    version: 1.0.0
+
+sends:
+  - id: emails-microservice-v1-event-emails-send-email
+    version: 1.0.0
+  - id: emails-microservice-v1-event-emails-email-created
+    version: 1.0.0
+  - id: emails-microservice-v1-event-emails-email-archived
+    version: 1.0.0
+---
+
+## Overview
+
+This Email service gives API consumers the ability to produce Email in the systems. Events are raised from this system for downstream consumption.
+
+<NodeGraph />
+---
+<Schema file="schema.dbml" title="DBML" lang="prisma"/>
+---
+<Schema file="schema.graphql" title="graphql" lang="graphql"/>

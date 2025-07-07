@@ -1,0 +1,312 @@
+asyncapi: 2.5.0
+info:
+  title: Files Async API
+  description: >-
+    The Files Async API to publish and subscribe to async events across
+    application plane and control plane
+  version: '1.0'
+  contact: {}
+tags: []
+servers:
+  files-server:
+    url: >-
+      amqp://utopikai-rag-solace-dev-c18f75dc81ef2e53.elb.eu-west-1.amazonaws.com:5672
+    protocol: amqp
+    protocolVersion: v1.0
+    description: Allows you to connect using the AMQP protocol to Messaging Broker.
+    security:
+      - user-password: []
+    variables:
+      port:
+        description: >-
+          Secure connection (TLS) is available through port 5671. Non secure
+          connection available through port 5672. 
+        default: '5672'
+    bindings: {}
+components:
+  securitySchemes:
+    user-password:
+      type: http
+      scheme: basic
+      description: >-
+        Basic Authentication (Username and Password) for connecting to the
+        Solace Broker
+  schemas:
+    RequestHeaders:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          description: Unique identifier for tracking the request
+          example: 123e4567-e89b-12d3-a456-426614174000
+        sourceType:
+          type: string
+          description: Type of the source of the message
+          example: API
+          default: APPLCIATION
+        sourceIdType:
+          type: string
+          description: Type of identifier
+          example: USER_ID
+          default: Application-ID
+        sourceId:
+          type: string
+          description: Identifier of the source, conform to the sourceIdType
+          example: user-12345
+        uid:
+          type: string
+          description: Unique ID of the message instance in the channel
+          example: abc123xyz
+        dataConfidentiality:
+          type: string
+          description: Data confidentiality classification of the message
+          enum:
+            - A
+            - B
+            - C
+            - INTERNAL
+            - PUBLIC
+            - P
+            - P+
+          example: PUBLIC
+          default: C
+        persistence:
+          type: boolean
+          description: Tells if the message can be persisted by the receiver
+          example: true
+          default: true
+        replyChannel:
+          type: string
+          description: URI Identifier of the channel to which the response should be sent
+          example: http://response-channel.example.com
+        createdAt:
+          type: string
+          description: Creation date time
+          example: '2023-01-01T12:00:00Z'
+        charEncoding:
+          type: string
+          description: Char encoding of the data
+          example: UTF-8
+          default: utf-8
+        languageCode:
+          type: string
+          description: Language code of the data, default is English.
+          example: en
+          default: en
+        host:
+          type: string
+          description: Hostname from where the request is coming from
+          example: example.com
+        topic:
+          type: string
+          description: Topic name
+          example: topic-name
+      required:
+        - correlationId
+        - sourceId
+        - uid
+        - createdAt
+        - topic
+    FileCreated:
+      type: object
+      properties:
+        _headers:
+          example:
+            correlationId: 123e4567-e89b-12d3-a456-426614174000
+            sourceType: API
+            sourceIdType: USER_ID
+            sourceId: user-12345
+            uid: abc123xyz
+            dataConfidentiality: PUBLIC
+            persistence: true
+            replyChannel: http://response-channel.example.com
+            createdAt: '2023-01-01T12:00:00Z'
+            charEncoding: UTF-8
+            languageCode: en
+            host: example.com
+            topic: topic
+          allOf:
+            - $ref: '#/components/schemas/RequestHeaders'
+        fileId:
+          type: string
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+          example: Project_Plan.pdf
+        status:
+          type: string
+          example: uploaded
+        fileUrl:
+          type: string
+          example: https://storage.example.com/files/Project_Plan.pdf
+        ownerId:
+          type: string
+          example: b1a7f9d8-4f3b-4e26-a8a7-3dc35dbb6a0a
+        folderName:
+          type: string
+          example: documents
+        bucketName:
+          type: string
+          example: team-uploads
+        preSignedUrl:
+          type: string
+          example: >-
+            https://storage.example.com/presigned/project_plan_upload?token=abc123xyz
+      required:
+        - fileId
+        - createdAt
+        - updatedAt
+    FileUpdated:
+      type: object
+      properties:
+        _headers:
+          example:
+            correlationId: 123e4567-e89b-12d3-a456-426614174000
+            sourceType: API
+            sourceIdType: USER_ID
+            sourceId: user-12345
+            uid: abc123xyz
+            dataConfidentiality: PUBLIC
+            persistence: true
+            replyChannel: http://response-channel.example.com
+            createdAt: '2023-01-01T12:00:00Z'
+            charEncoding: UTF-8
+            languageCode: en
+            host: example.com
+            topic: topic
+          allOf:
+            - $ref: '#/components/schemas/RequestHeaders'
+        fileId:
+          type: string
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+          example: Project_Plan.pdf
+        status:
+          type: string
+          example: uploaded
+        fileUrl:
+          type: string
+          example: https://storage.example.com/files/Project_Plan.pdf
+        ownerId:
+          type: string
+          example: b1a7f9d8-4f3b-4e26-a8a7-3dc35dbb6a0a
+        folderName:
+          type: string
+          example: documents
+        bucketName:
+          type: string
+          example: team-uploads
+        preSignedUrl:
+          type: string
+          example: >-
+            https://storage.example.com/presigned/project_plan_upload?token=abc123xyz
+      required:
+        - fileId
+        - createdAt
+        - updatedAt
+    FileDeleted:
+      type: object
+      properties:
+        _headers:
+          example:
+            correlationId: 123e4567-e89b-12d3-a456-426614174000
+            sourceType: API
+            sourceIdType: USER_ID
+            sourceId: user-12345
+            uid: abc123xyz
+            dataConfidentiality: PUBLIC
+            persistence: true
+            replyChannel: http://response-channel.example.com
+            createdAt: '2023-01-01T12:00:00Z'
+            charEncoding: UTF-8
+            languageCode: en
+            host: example.com
+            topic: topic
+          allOf:
+            - $ref: '#/components/schemas/RequestHeaders'
+        fileId:
+          type: string
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+          example: Project_Plan.pdf
+        status:
+          type: string
+          example: uploaded
+        fileUrl:
+          type: string
+          example: https://storage.example.com/files/Project_Plan.pdf
+        ownerId:
+          type: string
+          example: b1a7f9d8-4f3b-4e26-a8a7-3dc35dbb6a0a
+        folderName:
+          type: string
+          example: documents
+        bucketName:
+          type: string
+          example: team-uploads
+        preSignedUrl:
+          type: string
+          example: >-
+            https://storage.example.com/presigned/project_plan_upload?token=abc123xyz
+      required:
+        - fileId
+        - createdAt
+        - updatedAt
+defaultContentType: application/json
+channels:
+  files-microservice/v1/event/files/file-created:
+    publish:
+      summary: 'Fire an event: files.file-created'
+      description: >-
+        This method is used to let the platform know that a public file is
+        created
+      operationId: files.file-created.publish
+      message:
+        name: files-microservice/v1/event/files/file-created
+        payload:
+          $ref: '#/components/schemas/FileCreated'
+        x-identifier: files.file-created.event
+  files-microservice/v1/event/files/file-updated:
+    publish:
+      summary: 'Fire an event: files.file-updated'
+      description: >-
+        This method is used to let the platform know that a public file is
+        uploaded
+      operationId: files.file-updated.publish
+      message:
+        name: files-microservice/v1/event/files/file-updated
+        payload:
+          $ref: '#/components/schemas/FileUpdated'
+        x-identifier: files.file-updated.event
+  files-microservice/v1/event/files/file-deleted:
+    publish:
+      summary: 'Fire an event: files.file-deleted'
+      description: >-
+        This method is used to let the platform know that a public file is
+        deleted
+      operationId: files.file-deleted.publish
+      message:
+        name: files-microservice/v1/event/files/file-deleted
+        payload:
+          $ref: '#/components/schemas/FileDeleted'
+        x-identifier: files.file-deleted.event
