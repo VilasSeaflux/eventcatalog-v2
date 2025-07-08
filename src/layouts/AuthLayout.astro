@@ -32,10 +32,10 @@ import { Auth } from "./Auth";
             });
             const data = await res.json();
             if (data.success) {
-              document.location.href = "/";
+              document.location.replace("/");
             }
           } catch (err) {
-            document.location.href = "/sign-in";
+            document.location.replace("/sign-in");
           }
         }
       }
