@@ -1,4 +1,4 @@
-import { APIContext, APIRoute, AstroCookies, RouteData } from "astro";
+import { APIContext } from "astro";
 import jwt from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 

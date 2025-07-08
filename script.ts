@@ -28,8 +28,11 @@ var copyCore = () => {
     }
     // Remove any misplaced envPrefix inside define
     config = config.replace(/(define:\\s*{[^}]*),?\\s*envPrefix:[^,}]+/s, '$1');
+
+    const envPrefixRegex = /envPrefix:\s*['"][^'"]*VITE_[^'"]*['"]/;
+
     // Add envPrefix outside define if not present
-    if (!/vite:\\s*{[sS]*?envPrefix:/.test(config)) {
+    if (envPrefixRegex.test(config)) {
       config = config.replace(
         /(vite:\\s*{[\\s\\S]*?)(\\n\\s*worker:)/,
         (match, beforeWorker, workerLine) => {

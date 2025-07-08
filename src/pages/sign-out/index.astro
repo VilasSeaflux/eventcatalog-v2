@@ -1,0 +1,20 @@
+<main class="flex flex-col w-screen h-screen items-center justify-center">
+  <p class="text-xl font-bold">Looks like you're token has been expires</p>
+  <p class="text-lg font-semibold">Please wait while we redirect</p>
+</main>
+<script>
+  import { signOut } from "@aws-amplify/auth";
+
+  async function autoSignOut() {
+    try {
+      await signOut();
+      localStorage.clear();
+
+      window.location.replace("/sign-in");
+    } catch (err) {
+      console.error("Error signing out:", err);
+    }
+  }
+
+  autoSignOut();
+</script>
