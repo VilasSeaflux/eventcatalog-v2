@@ -25,11 +25,16 @@ function verifyAccessToken(token) {
 
 export const onRequest = defineMiddleware(
   async ({ url, locals, redirect, cookies }, next) => {
-    if (url.pathname.includes("/api/") || url.pathname.includes("/sign-out")) {
+    if (url.pathname.includes("/api/")) {
       return next();
     }
 
     const token = cookies.get("idToken")?.value;
+
+    // If token, block access to sign out page
+    if (token && url.pathname === "/sign-out") {
+      return redirect("/");
+    }
 
     // If no token, block access except sign-in page
     if (!token && url.pathname !== "/sign-in") {
