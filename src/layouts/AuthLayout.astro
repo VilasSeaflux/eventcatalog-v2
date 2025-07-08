@@ -20,8 +20,7 @@ import { Auth } from "./Auth";
 
       async function handleAuthSuccess(userDetails: any) {
         const session = await fetchAuthSession();
-        const idToken = session.tokens?.idToken?.toString();
-        console.log("ID token:", idToken);
+        const idToken = session.tokens?.accessToken.toString();
 
         if (userDetails) {
           const res = await fetch("/api/set-user", {
