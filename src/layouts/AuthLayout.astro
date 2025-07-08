@@ -21,16 +21,21 @@ import { Auth } from "./Auth";
       async function handleAuthSuccess(userDetails: any) {
         const session = await fetchAuthSession();
         const idToken = session.tokens?.accessToken.toString();
+        const sub = session.userSub;
 
         if (userDetails) {
-          const res = await fetch("/api/set-user", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: userDetails.email, idToken }),
-          });
-          const data = await res.json();
-          if (data.success) {
-            document.location.href = "/";
+          try {
+            const res = await fetch("/api/set-user", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: userDetails.email, idToken, sub }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              document.location.href = "/";
+            }
+          } catch (err) {
+            document.location.href = "/sign-in";
           }
         }
       }

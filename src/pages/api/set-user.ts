@@ -18,23 +18,29 @@ function getKey(header, callback) {
   });
 }
 
-function verifyCognitoToken(
+function verifyCognitoAccessToken(
   token: string,
-  expectedEmail: string
-): Promise<{ email: string; idToken: string }> {
+  expectedSub: string
+): Promise<{ sub: string; accessToken: string }> {
   return new Promise((resolve, reject) => {
     jwt.verify(token, getKey, {}, (err, decoded) => {
       if (err) {
         console.error("JWT verification failed:", err);
+
         return reject(new Error("Invalid token"));
       }
 
-      if (decoded?.email !== expectedEmail) {
-        console.error("Email mismatch:", decoded?.email, expectedEmail);
-        return reject(new Error("Email does not match token"));
+      if (!decoded?.sub) {
+        console.error("Decoded token missing sub:", decoded);
+        return reject(new Error("Token missing subject"));
       }
 
-      resolve({ email: decoded.email, idToken: token });
+      if (decoded.sub !== expectedSub) {
+        console.error("Sub mismatch:", decoded.sub, expectedSub);
+        return reject(new Error("Sub does not match token"));
+      }
+
+      resolve({ sub: decoded.sub, accessToken: token });
     });
   });
 }
@@ -42,10 +48,12 @@ function verifyCognitoToken(
 export async function POST({ request, cookies }: APIContext) {
   let email;
   let token;
+  let sub;
   try {
     const body = await request.json();
     email = body.email;
     token = body.idToken;
+    sub = body.sub;
 
     if (!token || !email) {
       return new Response(
@@ -58,10 +66,10 @@ export async function POST({ request, cookies }: APIContext) {
   }
 
   try {
-    const { email: verifiedEmail, idToken: verifiedToken } =
-      await verifyCognitoToken(token, email);
+    const { sub: verifiedEmail, accessToken: verifiedToken } =
+      await verifyCognitoAccessToken(token, sub);
 
-    cookies.set("userEmail", verifiedEmail, {
+    cookies.set("userEmail", email, {
       path: "/",
       httpOnly: true,
     });
