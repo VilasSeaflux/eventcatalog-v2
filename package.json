@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run copy-src && eventcatalog dev",
-    "build": "eventcatalog build",
+    "build": "npm run copy-src && eventcatalog build",
     "start": "npm run copy-src && eventcatalog start",
     "preview": "eventcatalog preview",
     "generate": "eventcatalog generate",
