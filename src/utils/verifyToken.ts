@@ -19,4 +19,10 @@ async function parseJwt(token: string) {
   }
 }
 
+export async function isTokenExpired(payload: any) {
+  if (!payload?.exp) return true;
+  const now = Date.now() / 1000;
+  return payload.exp < now;
+}
+
 export default parseJwt;

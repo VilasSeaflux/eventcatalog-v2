@@ -16,27 +16,30 @@ import { Auth } from "./Auth";
     <script>
       import { Hub } from "aws-amplify/utils";
       import "../amplifyClient";
-      import { fetchAuthSession, getCurrentUser } from "@aws-amplify/auth";
+      import { getCurrentUser } from "@aws-amplify/auth";
       import { isBelongsTo } from "../utils/permissions";
       import parseJwt from "../utils/verifyToken";
 
       //function to handle accessToken fetching after user sign in
       async function handleAuthSuccess(userDetails: any) {
-        const session = await fetchAuthSession();
-
-        const idToken = session.tokens?.accessToken.toString();
-        const res = await parseJwt(idToken || "");
+        const { userId } = await getCurrentUser();
+        const token = localStorage.getItem(
+          `CognitoIdentityServiceProvider.${import.meta.env.VITE_COGNITO_CLIENT_ID}.${userId}.accessToken`
+        );
+        const res = await parseJwt(token || "");
         const userGroup = await res?.["cognito:groups"];
         const hasPermission = isBelongsTo(userGroup);
-
-        const sub = session.userSub;
 
         if (userDetails && hasPermission) {
           try {
             const res = await fetch("/api/set-user", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email: userDetails.email, idToken, sub }),
+              body: JSON.stringify({
+                email: userDetails.email,
+                idToken: token,
+                sub: userId,
+              }),
             });
             const data = await res.json();
             if (data.success) {
