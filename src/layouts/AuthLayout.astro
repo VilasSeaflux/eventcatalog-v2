@@ -16,17 +16,17 @@ import { Auth } from "./Auth";
     <script>
       import { Hub } from "aws-amplify/utils";
       import "../amplifyClient";
-      import { getCurrentUser } from "@aws-amplify/auth";
+      import { getCurrentUser, fetchAuthSession } from "@aws-amplify/auth";
       import { isBelongsTo } from "../utils/permissions";
       import parseJwt from "../utils/verifyToken";
 
       //function to handle accessToken fetching after user sign in
       async function handleAuthSuccess(userDetails: any) {
         const { userId } = await getCurrentUser();
-        const token = localStorage.getItem(
-          `CognitoIdentityServiceProvider.${import.meta.env.VITE_COGNITO_CLIENT_ID}.${userId}.accessToken`
-        );
-        const res = await parseJwt(token || "");
+        const session = await fetchAuthSession();
+
+        const idToken = session.tokens?.accessToken.toString();
+        const res = await parseJwt(idToken || "");
         const userGroup = await res?.["cognito:groups"];
         const hasPermission = isBelongsTo(userGroup);
 
@@ -37,7 +37,7 @@ import { Auth } from "./Auth";
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 email: userDetails.email,
-                idToken: token,
+                idToken,
                 sub: userId,
               }),
             });

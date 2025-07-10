@@ -1,18 +1,19 @@
 import "../amplifyClient";
 import "@aws-amplify/ui-react/styles.css";
 import { Authenticator } from "@aws-amplify/ui-react";
-import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import { fetchAuthSession, signOut } from "@aws-amplify/auth";
 import { useEffect, useState } from "react";
-import parseJwt, { isTokenExpired } from "../utils/verifyToken";
+import parseJwt from "../utils/verifyToken";
 import { isBelongsTo } from "../utils/permissions";
 
 export const Auth = () => {
-  const [hasPermission, setHasPermission] = useState(false);
+  const [hasPermission, setHasPermission] = useState(true);
   const [checked, setChecked] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>();
 
   async function handleFullSignOut() {
     await signOut();
+    setHasPermission(true);
     localStorage.clear();
     window.location.replace("/sign-in");
   }
@@ -20,57 +21,59 @@ export const Auth = () => {
   useEffect(() => {
     async function checkPermission() {
       try {
-        const keys = Object.keys(localStorage);
-        const accessTokenKey = keys.find(
-          (k) =>
-            k.startsWith(
-              `CognitoIdentityServiceProvider.${
-                import.meta.env.VITE_COGNITO_CLIENT_ID
-              }`
-            ) && k.endsWith(".accessToken")
-        );
-
-        const token = accessTokenKey
-          ? localStorage.getItem(accessTokenKey)
-          : null;
-        setToken(token);
-
-        if (!token) {
-          setChecked(true);
-          return;
-        }
-
+        const session = await fetchAuthSession();
+        const token = session.tokens?.accessToken.toString() || "";
         const decoded = await parseJwt(token);
-
-        if (await isTokenExpired(decoded)) {
-          await handleFullSignOut();
-          return;
-        }
-
         const groups = decoded?.["cognito:groups"] || [];
-        setHasPermission(isBelongsTo(groups));
+        const allowed = isBelongsTo(groups);
+
+        setHasPermission(allowed);
       } catch (err) {
         console.log("Auth check error:", err);
+        setHasPermission(false);
       } finally {
         setChecked(true);
       }
     }
 
-    checkPermission();
-  }, []);
+    if (currentUser) {
+      checkPermission();
+    }
+  }, [currentUser]);
 
-  if (!checked) {
-    return (
-      <main className="flex flex-col w-screen h-screen items-center justify-center">
-        <p className="text-xl font-bold">Checking Permission...</p>
-      </main>
-    );
-  }
+  return (
+    <Authenticator hideSignUp variation="modal">
+      {({ user }) => {
+        if (!currentUser) setCurrentUser(user);
 
-  if (!token) {
-    return (
-      <Authenticator hideSignUp variation="modal">
-        {({ user }) => (
+        if (!checked) {
+          return (
+            <main className="flex flex-col w-screen h-screen items-center justify-center">
+              <p className="text-xl font-bold">Checking Permission...</p>
+            </main>
+          );
+        }
+
+        if (!hasPermission && checked) {
+          return (
+            <main className="flex flex-col w-screen h-screen items-center justify-center">
+              <p className="text-xl font-bold">
+                You don't have the required permission
+              </p>
+              <p className="text-lg font-semibold">
+                Please logout and sign-in again
+              </p>
+              <button
+                onClick={handleFullSignOut}
+                className="bg-slate-900 px-8 py-2 rounded-md mt-2 text-slate-100"
+              >
+                Sign out
+              </button>
+            </main>
+          );
+        }
+
+        return (
           <main className="flex flex-col w-screen h-screen items-center justify-center">
             <p className="text-xl font-bold">
               You have successfully logged in.
@@ -79,25 +82,8 @@ export const Auth = () => {
               Please wait while we redirect
             </p>
           </main>
-        )}
-      </Authenticator>
-    );
-  }
-
-  if (!hasPermission && token && !checked) {
-    return (
-      <main className="flex flex-col w-screen h-screen items-center justify-center">
-        <p className="text-xl font-bold">
-          You don't have the required permission
-        </p>
-        <p className="text-lg font-semibold">Please logout and sign-in again</p>
-        <button
-          onClick={handleFullSignOut}
-          className="bg-slate-900 px-8 py-2 rounded-md mt-2 text-slate-100"
-        >
-          Sign out
-        </button>
-      </main>
-    );
-  }
+        );
+      }}
+    </Authenticator>
+  );
 };
